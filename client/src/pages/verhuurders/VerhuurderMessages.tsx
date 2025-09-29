@@ -9,7 +9,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8f65 100%);
+  background: linear-gradient(135deg, #38b6ff 0%, #2196f3 100%);
   color: white;
   padding: 30px 0;
   text-align: center;
@@ -35,6 +35,12 @@ const ContentContainer = styled.div`
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 15px;
+    gap: 15px;
   }
 `;
 
@@ -80,11 +86,11 @@ const ConversationItem = styled.div<{ active?: boolean; hasUnread?: boolean }>`
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: ${props => props.active ? '#fff3e0' : 'white'};
-  border-left: 4px solid ${props => props.hasUnread ? '#ff6b35' : 'transparent'};
+  background: ${props => props.active ? '#e3f2fd' : 'white'};
+  border-left: 4px solid ${props => props.hasUnread ? '#38b6ff' : 'transparent'};
 
   &:hover {
-    background-color: ${props => props.active ? '#fff3e0' : '#f8f9fa'};
+    background-color: ${props => props.active ? '#e3f2fd' : '#f8f9fa'};
   }
 
   &:last-child {
@@ -122,7 +128,7 @@ const ConversationDate = styled.div`
 `;
 
 const UnreadBadge = styled.div`
-  background: #ff6b35;
+  background: #38b6ff;
   color: white;
   border-radius: 12px;
   padding: 2px 8px;
@@ -138,6 +144,10 @@ const ChatArea = styled.div`
   display: flex;
   flex-direction: column;
   height: 600px;
+
+  @media (max-width: 768px) {
+    height: 500px;
+  }
 `;
 
 const ChatHeader = styled.div`
@@ -170,13 +180,19 @@ const MessagesArea = styled.div`
 const MessageBubble = styled.div<{ isOwn: boolean }>`
   max-width: 70%;
   align-self: ${props => props.isOwn ? 'flex-end' : 'flex-start'};
-  background: ${props => props.isOwn ? '#ff6b35' : '#f0f0f0'};
+  background: ${props => props.isOwn ? '#38b6ff' : '#f0f0f0'};
   color: ${props => props.isOwn ? 'white' : '#333'};
   padding: 12px 16px;
   border-radius: ${props => props.isOwn ? '20px 20px 5px 20px' : '20px 20px 20px 5px'};
   font-size: 0.9rem;
   line-height: 1.4;
   word-wrap: break-word;
+
+  @media (max-width: 768px) {
+    max-width: 85%;
+    font-size: 0.85rem;
+    padding: 10px 14px;
+  }
 `;
 
 const MessageTime = styled.div<{ isOwn: boolean }>`
@@ -209,12 +225,17 @@ const ReplyInput = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #ff6b35;
+    border-color: #38b6ff;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+    padding: 10px;
   }
 `;
 
 const SendButton = styled.button`
-  background: #ff6b35;
+  background: #38b6ff;
   color: white;
   border: none;
   border-radius: 20px;
@@ -224,12 +245,17 @@ const SendButton = styled.button`
   transition: all 0.3s ease;
 
   &:hover {
-    background: #e55527;
+    background: #2196f3;
   }
 
   &:disabled {
     background: #ccc;
     cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 16px;
+    font-size: 0.85rem;
   }
 `;
 
@@ -389,9 +415,11 @@ const VerhuurderMessages: React.FC = () => {
       </Header>
 
       <ContentContainer>
-        <BackButton onClick={() => navigate('/verhuurders/dashboard')}>
-          ← Terug naar Dashboard
-        </BackButton>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <BackButton onClick={() => navigate('/verhuurders/dashboard')}>
+            ← Terug naar Dashboard
+          </BackButton>
+        </div>
 
         <ConversationsList>
           <ConversationsHeader>

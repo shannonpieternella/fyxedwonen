@@ -229,7 +229,7 @@ const Select = styled.select`
 `;
 
 const SearchButton = styled.button`
-  background: #fd7e14;
+  background: #38b6ff;
   color: white;
   font-weight: 600;
   border-radius: 50%;
@@ -241,12 +241,12 @@ const SearchButton = styled.button`
   width: 56px;
   height: 56px;
   margin: 8px;
-  box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
+  box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
 
   &:hover {
-    background: #e8681c;
+    background: #2196f3;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(253, 126, 20, 0.4);
+    box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
   }
 
   @media (max-width: 768px) {
