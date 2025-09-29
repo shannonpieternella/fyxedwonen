@@ -45,11 +45,32 @@ const SearchFormOverlay = styled.div`
   max-width: 1000px;
   margin: 0 20px;
 
+  @media (max-width: 1200px) {
+    grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+    gap: 2px;
+  }
+
   @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding: 16px;
-    border-radius: 24px;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 40px;
+    margin: 0 15px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1.5fr 1fr auto;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 30px;
+    margin: 0 10px;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr auto;
+    gap: 1px;
+    padding: 4px;
+    margin: 0 10px;
   }
 `;
 
@@ -70,11 +91,19 @@ const FilterGroup = styled.div`
   }
 
   @media (max-width: 968px) {
-    padding: 12px 0;
+    padding: 12px 8px;
 
     &:not(:last-child)::after {
       display: none;
     }
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px 6px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 6px 4px;
   }
 `;
 
@@ -83,6 +112,16 @@ const FilterLabel = styled.label`
   font-weight: 600;
   margin-bottom: 6px;
   font-size: 15px;
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
 `;
 
 const FilterInput = styled.input`
@@ -100,6 +139,14 @@ const FilterInput = styled.input`
 
   &:focus {
     color: #1e293b;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
   }
 `;
 
@@ -125,10 +172,22 @@ const FilterSelect = styled.select`
   option {
     color: #1e293b;
   }
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    background-size: 14px;
+    padding-right: 28px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    background-size: 12px;
+    padding-right: 24px;
+  }
 `;
 
 const SearchButton = styled.button`
-  background: #fd7e14;
+  background: #38b6ff;
   color: white;
   font-weight: 600;
   border-radius: 50%;
@@ -140,18 +199,33 @@ const SearchButton = styled.button`
   width: 56px;
   height: 56px;
   margin: 8px;
-  box-shadow: 0 4px 12px rgba(253, 126, 20, 0.3);
+  box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
 
   &:hover {
-    background: #e8681c;
+    background: #2196f3;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(253, 126, 20, 0.4);
+    box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
   }
 
   @media (max-width: 968px) {
     width: 100%;
     border-radius: 12px;
     height: 48px;
+  }
+
+  @media (max-width: 768px) {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 18px;
+    margin: 4px;
+  }
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    margin: 2px;
   }
 `;
 
