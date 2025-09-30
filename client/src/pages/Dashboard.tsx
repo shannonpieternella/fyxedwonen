@@ -410,7 +410,7 @@ const Dashboard: React.FC = () => {
               </FavoritesList>
             ) : (
               <EmptyState>
-                <div className="icon">🏠</div>
+                <div className="icon"></div>
                 <div className="title">Nog geen favorieten</div>
                 <div className="description">
                   Begin met zoeken en sla interessante woningen op als favoriet.
@@ -423,12 +423,12 @@ const Dashboard: React.FC = () => {
           <Sidebar>
             <QuickActions>
               <SectionTitle>
-                <SectionIcon>⚡</SectionIcon>
+                <SectionIcon></SectionIcon>
                 Snelle Acties
               </SectionTitle>
               <ActionList>
                 <QuickActionItem to="/woning">
-                  <span className="icon">🔍</span>
+                  <span className="icon"></span>
                   Woningen Zoeken
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/profile">
