@@ -27,15 +27,23 @@ const Logo = styled.div`
 
 const LogoText = styled.h1`
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #38b6ff, #2196f3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 `;
 
 const LogoSubtitle = styled.div`
-  font-size: 16px;
-  color: #38b6ff;
-  font-weight: 600;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 `;
 
 const Title = styled.h2`

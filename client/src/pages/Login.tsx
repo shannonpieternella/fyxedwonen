@@ -28,9 +28,23 @@ const Logo = styled.div`
 
 const LogoText = styled.h1`
   font-size: 32px;
-  font-weight: 700;
+  font-weight: 800;
   color: #1f2937;
   margin: 0;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #38b6ff, #2196f3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+`;
+
+const LogoSubtitle = styled.div`
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h2`
@@ -202,6 +216,7 @@ const Login: React.FC = () => {
       <LoginCard>
         <Logo>
           <LogoText>FYXED WONEN</LogoText>
+          <LogoSubtitle>Jouw droomhuis vinden</LogoSubtitle>
         </Logo>
 
         <Title>Inloggen</Title>

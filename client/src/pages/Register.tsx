@@ -20,9 +20,23 @@ const Header = styled.div`
 
 const Logo = styled.h1`
   font-size: 36px;
-  font-weight: 700;
+  font-weight: 800;
   color: #1f2937;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #38b6ff, #2196f3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+`;
+
+const LogoSubtitle = styled.div`
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 500;
   margin-bottom: 16px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 `;
 
 const Title = styled.h2`
@@ -216,6 +230,7 @@ const Register: React.FC = () => {
       <Container>
         <Header>
           <Logo>FYXED WONEN</Logo>
+          <LogoSubtitle>Jouw droomhuis vinden</LogoSubtitle>
           <Title>Kies je abonnement</Title>
           <Subtitle>
             Krijg onbeperkte toegang tot alle huurwoningen en exclusieve voordelen.
