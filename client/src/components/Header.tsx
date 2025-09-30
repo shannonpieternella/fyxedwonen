@@ -104,7 +104,7 @@ const LoginButton = styled(Link)`
 `;
 
 const RegisterButton = styled(Link)`
-  background-color: #fd7e14;
+  background-color: #38b6ff;
   color: white;
   font-weight: 600;
   padding: 10px 20px;
@@ -114,7 +114,7 @@ const RegisterButton = styled(Link)`
   display: inline-block;
 
   &:hover {
-    background-color: #e8681c;
+    background-color: #2196f3;
     transform: translateY(-1px);
   }
 `;
