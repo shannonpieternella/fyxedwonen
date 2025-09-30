@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #fd7e14, #e8681c);
+  background: linear-gradient(135deg, #38b6ff, #2196f3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +34,7 @@ const LogoText = styled.h1`
 
 const LogoSubtitle = styled.div`
   font-size: 16px;
-  color: #fd7e14;
+  color: #38b6ff;
   font-weight: 600;
 `;
 
@@ -73,7 +73,7 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #fd7e14;
+    border-color: #38b6ff;
   }
 
   &::placeholder {
@@ -82,7 +82,7 @@ const Input = styled.input`
 `;
 
 const LoginButton = styled.button`
-  background: #fd7e14;
+  background: #38b6ff;
   color: white;
   border: none;
   padding: 16px;
@@ -94,7 +94,7 @@ const LoginButton = styled.button`
   margin-top: 8px;
 
   &:hover {
-    background: #e8681c;
+    background: #2196f3;
   }
 
   &:disabled {
@@ -141,7 +141,7 @@ const RegisterPrompt = styled.div`
   font-size: 14px;
 
   a {
-    color: #fd7e14;
+    color: #38b6ff;
     text-decoration: none;
     font-weight: 500;
 
@@ -159,7 +159,7 @@ const BackToSite = styled(Link)`
   font-size: 14px;
 
   &:hover {
-    color: #fd7e14;
+    color: #38b6ff;
   }
 `;
 
