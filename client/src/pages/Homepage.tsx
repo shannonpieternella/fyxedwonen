@@ -154,16 +154,69 @@ const SearchForm = styled.form`
   }
 
   @media (max-width: 768px) {
-    grid-template-columns: 1.5fr 1fr auto;
-    gap: 2px;
-    padding: 4px;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    padding: 8px;
     border-radius: 30px;
   }
+`;
 
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr auto;
-    gap: 1px;
-    padding: 4px;
+const MobileFiltersContainer = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+    margin-top: 20px;
+  }
+`;
+
+const MobileFiltersGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+const MobileFilterCard = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f1f5f9;
+`;
+
+const MobileFilterLabel = styled.label`
+  color: #1e293b;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+  display: block;
+`;
+
+const MobileFilterSelect = styled.select`
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  color: #64748b;
+  background: white;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 12px center;
+  background-repeat: no-repeat;
+  background-size: 16px;
+  padding-right: 40px;
+
+  &:focus {
+    border-color: #38b6ff;
+    color: #1e293b;
+  }
+
+  option {
+    color: #1e293b;
   }
 `;
 
@@ -188,15 +241,15 @@ const FormGroup = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: 10px 12px;
+    padding: 12px 16px;
 
     &:not(:last-child)::after {
       display: none;
     }
-  }
 
-  @media (max-width: 480px) {
-    padding: 8px 10px;
+    &.mobile-hidden {
+      display: none;
+    }
   }
 `;
 
@@ -301,9 +354,10 @@ const SearchButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    border-radius: 12px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    margin: 0;
   }
 `;
 
@@ -517,7 +571,7 @@ const Homepage: React.FC = () => {
               />
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup className="mobile-hidden">
               <Label>Van</Label>
               <Select
                 name="minPrice"
@@ -534,7 +588,7 @@ const Homepage: React.FC = () => {
               </Select>
             </FormGroup>
 
-            <FormGroup>
+            <FormGroup className="mobile-hidden">
               <Label>Tot</Label>
               <Select
                 name="maxPrice"
@@ -555,6 +609,44 @@ const Homepage: React.FC = () => {
               🔍
             </SearchButton>
           </SearchForm>
+
+          <MobileFiltersContainer>
+            <MobileFiltersGrid>
+              <MobileFilterCard>
+                <MobileFilterLabel>Minimumprijs</MobileFilterLabel>
+                <MobileFilterSelect
+                  name="minPrice"
+                  value={searchData.minPrice}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Geen minimum</option>
+                  <option value="500">€ 500</option>
+                  <option value="750">€ 750</option>
+                  <option value="1000">€ 1.000</option>
+                  <option value="1250">€ 1.250</option>
+                  <option value="1500">€ 1.500</option>
+                  <option value="2000">€ 2.000</option>
+                </MobileFilterSelect>
+              </MobileFilterCard>
+
+              <MobileFilterCard>
+                <MobileFilterLabel>Maximumprijs</MobileFilterLabel>
+                <MobileFilterSelect
+                  name="maxPrice"
+                  value={searchData.maxPrice}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Geen maximum</option>
+                  <option value="1000">€ 1.000</option>
+                  <option value="1500">€ 1.500</option>
+                  <option value="2000">€ 2.000</option>
+                  <option value="2500">€ 2.500</option>
+                  <option value="3000">€ 3.000</option>
+                  <option value="3500">€ 3.500</option>
+                </MobileFilterSelect>
+              </MobileFilterCard>
+            </MobileFiltersGrid>
+          </MobileFiltersContainer>
         </SearchContainer>
       </SearchSection>
 
