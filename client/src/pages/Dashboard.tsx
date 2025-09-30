@@ -404,7 +404,7 @@ const Dashboard: React.FC = () => {
         <MainContent>
           <ContentSection>
             <SectionTitle>
-              <SectionIcon>❤️</SectionIcon>
+              <SectionIcon></SectionIcon>
               Favoriete Woningen
             </SectionTitle>
 
