@@ -309,7 +309,7 @@ const OverOns: React.FC = () => {
 
           <ValuesGrid>
             <ValueCard>
-              <ValueIcon>🏠</ValueIcon>
+              <ValueIcon></ValueIcon>
               <ValueTitle>Transparantie</ValueTitle>
               <ValueText>
                 Geen verborgen kosten, geen onduidelijke voorwaarden. Bij ons weet je precies waar je aan toe bent
@@ -327,7 +327,7 @@ const OverOns: React.FC = () => {
             </ValueCard>
 
             <ValueCard>
-              <ValueIcon>🤝</ValueIcon>
+              <ValueIcon></ValueIcon>
               <ValueTitle>Betrouwbaarheid</ValueTitle>
               <ValueText>
                 Met jarenlange ervaring en een bewezen track record kun je erop vertrouwen dat we er zijn
@@ -336,7 +336,7 @@ const OverOns: React.FC = () => {
             </ValueCard>
 
             <ValueCard>
-              <ValueIcon>💡</ValueIcon>
+              <ValueIcon></ValueIcon>
               <ValueTitle>Innovatie</ValueTitle>
               <ValueText>
                 We blijven investeren in nieuwe technologieën en methoden om onze service te verbeteren en
@@ -345,7 +345,7 @@ const OverOns: React.FC = () => {
             </ValueCard>
 
             <ValueCard>
-              <ValueIcon>❤️</ValueIcon>
+              <ValueIcon></ValueIcon>
               <ValueTitle>Persoonlijke Service</ValueTitle>
               <ValueText>
                 Elke klant is uniek. We luisteren naar jouw specifieke behoeften en bieden persoonlijk advies
@@ -397,7 +397,7 @@ const OverOns: React.FC = () => {
 
         <TeamGrid>
           <TeamCard>
-            <TeamPhoto>👨‍💼</TeamPhoto>
+            <TeamPhoto></TeamPhoto>
             <TeamName>Mark van der Berg</TeamName>
             <TeamRole>Founder & CEO</TeamRole>
             <TeamBio>
@@ -417,7 +417,7 @@ const OverOns: React.FC = () => {
           </TeamCard>
 
           <TeamCard>
-            <TeamPhoto>👨‍🏠</TeamPhoto>
+            <TeamPhoto></TeamPhoto>
             <TeamName>David Müller</TeamName>
             <TeamRole>Head of Operations</TeamRole>
             <TeamBio>
@@ -427,7 +427,7 @@ const OverOns: React.FC = () => {
           </TeamCard>
 
           <TeamCard>
-            <TeamPhoto>👩‍💼</TeamPhoto>
+            <TeamPhoto></TeamPhoto>
             <TeamName>Sarah de Wit</TeamName>
             <TeamRole>Customer Success Manager</TeamRole>
             <TeamBio>

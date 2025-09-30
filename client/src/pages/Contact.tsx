@@ -322,7 +322,7 @@ const Contact: React.FC = () => {
 
             <ContactDetails>
               <ContactItem>
-                <ContactIcon>📞</ContactIcon>
+                <ContactIcon></ContactIcon>
                 <ContactInfoText>
                   <ContactLabel>Telefoon</ContactLabel>
                   <ContactValue>+31 26 123 4567</ContactValue>
@@ -330,7 +330,7 @@ const Contact: React.FC = () => {
               </ContactItem>
 
               <ContactItem>
-                <ContactIcon>📧</ContactIcon>
+                <ContactIcon></ContactIcon>
                 <ContactInfoText>
                   <ContactLabel>E-mail</ContactLabel>
                   <ContactValue>info@fyxedwonen.nl</ContactValue>
@@ -338,7 +338,7 @@ const Contact: React.FC = () => {
               </ContactItem>
 
               <ContactItem>
-                <ContactIcon>📍</ContactIcon>
+                <ContactIcon></ContactIcon>
                 <ContactInfoText>
                   <ContactLabel>Adres</ContactLabel>
                   <ContactValue>
@@ -349,7 +349,7 @@ const Contact: React.FC = () => {
               </ContactItem>
 
               <ContactItem>
-                <ContactIcon>🕒</ContactIcon>
+                <ContactIcon></ContactIcon>
                 <ContactInfoText>
                   <ContactLabel>Openingstijden</ContactLabel>
                   <ContactValue>
@@ -366,7 +366,7 @@ const Contact: React.FC = () => {
 
             {success && (
               <SuccessMessage>
-                ✅ Bedankt voor je bericht! We nemen zo snel mogelijk contact op.
+                Bedankt voor je bericht! We nemen zo snel mogelijk contact op.
               </SuccessMessage>
             )}
 
@@ -456,7 +456,7 @@ const Contact: React.FC = () => {
       <CompanyInfoSection>
         <CompanyInfoGrid>
           <InfoCard>
-            <InfoIcon>🏢</InfoIcon>
+            <InfoIcon></InfoIcon>
             <InfoTitle>Bedrijfsgegevens</InfoTitle>
             <InfoText>
               KvK: 97975354<br />
@@ -466,7 +466,7 @@ const Contact: React.FC = () => {
           </InfoCard>
 
           <InfoCard>
-            <InfoIcon>⚡</InfoIcon>
+            <InfoIcon></InfoIcon>
             <InfoTitle>Snelle Reactie</InfoTitle>
             <InfoText>
               We reageren binnen 24 uur op alle vragen en staan klaar om je te helpen bij het vinden van je ideale woning.
@@ -474,7 +474,7 @@ const Contact: React.FC = () => {
           </InfoCard>
 
           <InfoCard>
-            <InfoIcon>🛡️</InfoIcon>
+            <InfoIcon></InfoIcon>
             <InfoTitle>Betrouwbaar</InfoTitle>
             <InfoText>
               Met jaren ervaring in de huurmarkt bieden we een veilige en betrouwbare service voor huurders en verhuurders.
