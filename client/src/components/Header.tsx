@@ -249,13 +249,13 @@ const Header: React.FC = () => {
             {isVerhuurderLoggedIn ? (
               <UserMenu>
                 <NavLink to="/verhuurders/dashboard">Dashboard</NavLink>
-                <UserInfo>🟠 {verhuurderEmail}</UserInfo>
+                <UserInfo>{verhuurderEmail}</UserInfo>
                 <LogoutButton onClick={handleVerhuurderLogout}>Uitloggen</LogoutButton>
               </UserMenu>
             ) : isLoggedIn ? (
               <UserMenu>
                 <NavLink to="/dashboard">Dashboard</NavLink>
-                <UserInfo>🟢 {userEmail}</UserInfo>
+                <UserInfo>{userEmail}</UserInfo>
                 <LogoutButton onClick={handleLogout}>Uitloggen</LogoutButton>
               </UserMenu>
             ) : (

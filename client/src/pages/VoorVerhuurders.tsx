@@ -214,7 +214,7 @@ const PopularBadge = styled.div`
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #fd7e14;
+  background: #38b6ff;
   color: white;
   padding: 8px 24px;
   border-radius: 20px;

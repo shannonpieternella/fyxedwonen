@@ -91,7 +91,7 @@ const PopularBadge = styled.div`
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #fd7e14;
+  background: #38b6ff;
   color: white;
   padding: 8px 24px;
   border-radius: 20px;
@@ -165,7 +165,7 @@ const FeatureItem = styled.li`
 const SelectButton = styled.button<{ featured?: boolean }>`
   width: 100%;
   padding: 16px;
-  background: ${props => props.featured ? '#38b6ff' : '#fd7e14'};
+  background: ${props => props.featured ? '#38b6ff' : '#38b6ff'};
   color: white;
   border: none;
   border-radius: 12px;
@@ -175,7 +175,7 @@ const SelectButton = styled.button<{ featured?: boolean }>`
   transition: all 0.3s ease;
 
   &:hover {
-    background: ${props => props.featured ? '#2196f3' : '#e8681c'};
+    background: ${props => props.featured ? '#2196f3' : '#2196f3'};
     transform: translateY(-2px);
   }
 `;

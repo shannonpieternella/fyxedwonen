@@ -162,6 +162,38 @@ const TermsText = styled.div`
   }
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+`;
+
+const Checkbox = styled.input`
+  margin: 0;
+  margin-top: 2px;
+`;
+
+const CheckboxLabel = styled.label`
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.4;
+  cursor: pointer;
+
+  a {
+    color: #38b6ff;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const RegisterForm: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [formData, setFormData] = useState({
@@ -172,6 +204,7 @@ const RegisterForm: React.FC = () => {
     password: '',
     confirmPassword: ''
   });
+  const [avgAccepted, setAvgAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -202,6 +235,12 @@ const RegisterForm: React.FC = () => {
     setSuccess('');
 
     // Basic validation
+    if (!avgAccepted) {
+      setError('Je moet akkoord gaan met de Algemene Voorwaarden en het Privacybeleid');
+      setLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError('Wachtwoorden komen niet overeen');
       setLoading(false);
@@ -357,7 +396,28 @@ const RegisterForm: React.FC = () => {
             />
           </InputGroup>
 
-          <RegisterButton type="submit" disabled={loading}>
+          <CheckboxContainer>
+            <Checkbox
+              type="checkbox"
+              id="avgAccepted"
+              checked={avgAccepted}
+              onChange={(e) => setAvgAccepted(e.target.checked)}
+              required
+            />
+            <CheckboxLabel htmlFor="avgAccepted">
+              Ik ga akkoord met de{' '}
+              <a href="/terms" target="_blank" rel="noopener noreferrer">
+                Algemene Voorwaarden
+              </a>{' '}
+              en het{' '}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                Privacybeleid
+              </a>
+              .
+            </CheckboxLabel>
+          </CheckboxContainer>
+
+          <RegisterButton type="submit" disabled={loading || !avgAccepted}>
             {loading ? 'Registreren...' : `Doorgaan naar betaling`}
           </RegisterButton>
 
