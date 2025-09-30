@@ -161,62 +161,40 @@ const SearchForm = styled.form`
   }
 `;
 
-const MobileFiltersContainer = styled.div`
+const MobileActionBar = styled.div`
   display: none;
 
   @media (max-width: 768px) {
-    display: block;
-    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+    padding: 0 8px;
+    flex-wrap: wrap;
   }
 `;
 
-const MobileFiltersGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-`;
-
-const MobileFilterCard = styled.div`
-  background: white;
+const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f5f9;
-`;
-
-const MobileFilterLabel = styled.label`
-  color: #1e293b;
-  font-weight: 600;
-  margin-bottom: 8px;
   font-size: 14px;
-  display: block;
-`;
-
-const MobileFilterSelect = styled.select`
-  width: 100%;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 14px;
-  color: #64748b;
-  background: white;
-  outline: none;
+  font-weight: 500;
+  border: 1px solid #e5e7eb;
+  background: ${props => props.variant === 'primary' ? '#10b981' : 'white'};
+  color: ${props => props.variant === 'primary' ? 'white' : '#374151'};
   cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 12px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  padding-right: 40px;
+  transition: all 0.2s;
+  flex: ${props => props.variant === 'primary' ? '1' : 'auto'};
+  min-width: fit-content;
 
-  &:focus {
-    border-color: #38b6ff;
-    color: #1e293b;
+  &:hover {
+    background: ${props => props.variant === 'primary' ? '#059669' : '#f9fafb'};
   }
 
-  option {
-    color: #1e293b;
+  .icon {
+    font-size: 16px;
   }
 `;
 
@@ -610,43 +588,24 @@ const Homepage: React.FC = () => {
             </SearchButton>
           </SearchForm>
 
-          <MobileFiltersContainer>
-            <MobileFiltersGrid>
-              <MobileFilterCard>
-                <MobileFilterLabel>Minimumprijs</MobileFilterLabel>
-                <MobileFilterSelect
-                  name="minPrice"
-                  value={searchData.minPrice}
-                  onChange={handleInputChange}
-                >
-                  <option value="">Geen minimum</option>
-                  <option value="500">€ 500</option>
-                  <option value="750">€ 750</option>
-                  <option value="1000">€ 1.000</option>
-                  <option value="1250">€ 1.250</option>
-                  <option value="1500">€ 1.500</option>
-                  <option value="2000">€ 2.000</option>
-                </MobileFilterSelect>
-              </MobileFilterCard>
-
-              <MobileFilterCard>
-                <MobileFilterLabel>Maximumprijs</MobileFilterLabel>
-                <MobileFilterSelect
-                  name="maxPrice"
-                  value={searchData.maxPrice}
-                  onChange={handleInputChange}
-                >
-                  <option value="">Geen maximum</option>
-                  <option value="1000">€ 1.000</option>
-                  <option value="1500">€ 1.500</option>
-                  <option value="2000">€ 2.000</option>
-                  <option value="2500">€ 2.500</option>
-                  <option value="3000">€ 3.000</option>
-                  <option value="3500">€ 3.500</option>
-                </MobileFilterSelect>
-              </MobileFilterCard>
-            </MobileFiltersGrid>
-          </MobileFiltersContainer>
+          <MobileActionBar>
+            <ActionButton variant="primary">
+              <span className="icon">💾</span>
+              Zoekopslaan
+            </ActionButton>
+            <ActionButton>
+              <span className="icon">⚙️</span>
+              Filters (0)
+            </ActionButton>
+            <ActionButton>
+              <span className="icon">🔲</span>
+              Tegel
+            </ActionButton>
+            <ActionButton>
+              <span className="icon">🗺️</span>
+              Kaart
+            </ActionButton>
+          </MobileActionBar>
         </SearchContainer>
       </SearchSection>
 
