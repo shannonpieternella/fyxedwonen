@@ -46,26 +46,6 @@ const HeroTitle = styled.h1`
   }
 `;
 
-const Rating = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-
-  .stars {
-    color: #fbbf24;
-    font-size: 16px;
-  }
-
-  .score {
-    font-weight: 600;
-    color: #1f2937;
-  }
-
-  .total {
-    color: #6b7280;
-  }
-`;
 
 const TruckContainer = styled.div`
   position: relative;
@@ -522,11 +502,6 @@ const Homepage: React.FC = () => {
               een woning huren
             </HeroTitle>
 
-            <Rating>
-              <span className="stars">⭐⭐⭐⭐⭐</span>
-              <span className="score">5.00</span>
-              <span className="total">/5.00 0</span>
-            </Rating>
           </LeftContent>
 
           <TruckContainer>
