@@ -215,19 +215,40 @@ const QuickActionItem = styled(Link)`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
   text-decoration: none;
   color: #4b5563;
-  transition: all 0.2s;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-weight: 500;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: #f3f4f6;
-    color: #38b6ff;
+    background: #38b6ff;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
+    border-color: #38b6ff;
   }
 
   .icon {
-    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #38b6ff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  &:hover .icon {
+    background: white;
+    color: #38b6ff;
   }
 `;
 
@@ -428,19 +449,19 @@ const Dashboard: React.FC = () => {
               </SectionTitle>
               <ActionList>
                 <QuickActionItem to="/woning">
-                  <span className="icon"></span>
+                  <span className="icon">Z</span>
                   Woningen Zoeken
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/profile">
-                  <span className="icon">👤</span>
+                  <span className="icon">P</span>
                   Profiel Bewerken
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/search-alerts">
-                  <span className="icon">🔔</span>
+                  <span className="icon">A</span>
                   Zoek Alerts
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/conversations">
-                  <span className="icon">📝</span>
+                  <span className="icon">R</span>
                   Mijn Reacties
                 </QuickActionItem>
               </ActionList>
@@ -448,7 +469,7 @@ const Dashboard: React.FC = () => {
 
             <RecentSearches>
               <SectionTitle>
-                <SectionIcon>🕒</SectionIcon>
+                <SectionIcon></SectionIcon>
                 Recente Zoekopdrachten
               </SectionTitle>
               {recentSearches.length > 0 ? (
