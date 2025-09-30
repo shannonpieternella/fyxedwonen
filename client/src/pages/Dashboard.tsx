@@ -214,8 +214,7 @@ const ActionList = styled.div`
 const QuickActionItem = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px;
+  padding: 16px 20px;
   border-radius: 12px;
   text-decoration: none;
   color: #4b5563;
@@ -230,25 +229,6 @@ const QuickActionItem = styled(Link)`
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
     border-color: #38b6ff;
-  }
-
-  .icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #38b6ff;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-  &:hover .icon {
-    background: white;
-    color: #38b6ff;
   }
 `;
 
@@ -449,19 +429,15 @@ const Dashboard: React.FC = () => {
               </SectionTitle>
               <ActionList>
                 <QuickActionItem to="/woning">
-                  <span className="icon">Z</span>
                   Woningen Zoeken
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/profile">
-                  <span className="icon">P</span>
                   Profiel Bewerken
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/search-alerts">
-                  <span className="icon">A</span>
                   Zoek Alerts
                 </QuickActionItem>
                 <QuickActionItem to="/dashboard/conversations">
-                  <span className="icon">R</span>
                   Mijn Reacties
                 </QuickActionItem>
               </ActionList>
