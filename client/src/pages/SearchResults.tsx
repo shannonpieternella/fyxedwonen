@@ -409,38 +409,17 @@ const PropertyTitle = styled.h3`
   overflow: hidden;
 `;
 
-const CountryFlagSelect = styled.div`
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #4b5563;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 12px;
-  width: fit-content;
-
-  &:hover {
-    border-color: #38b6ff;
-  }
-
-  &::after {
-    content: '▼';
-    font-size: 10px;
-    color: #6b7280;
-    margin-left: auto;
-  }
-`;
-
 const PropertyAddress = styled.p`
   font-size: 14px;
   color: #6b7280;
-  margin: 0;
+  margin: 0 0 12px 0;
+`;
+
+const PropertyPrice = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-top: auto;
 `;
 
 const Pagination = styled.div`
@@ -931,13 +910,13 @@ const SearchResults: React.FC = () => {
                 <PropertyInfo>
                   <PropertyTitle>{property.title}</PropertyTitle>
 
-                  <CountryFlagSelect>
-                    🇳🇱
-                  </CountryFlagSelect>
-
                   <PropertyAddress>
                     {property.address.postalCode} {property.address.city}
                   </PropertyAddress>
+
+                  <PropertyPrice>
+                    € {property.price.toLocaleString('nl-NL')} / maand
+                  </PropertyPrice>
                 </PropertyInfo>
               </PropertyCard>
             ))}
