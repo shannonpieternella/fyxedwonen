@@ -244,7 +244,7 @@ const Register: React.FC = () => {
             <PlanName>Premium Basic</PlanName>
             <PlanDescription>1 Maand</PlanDescription>
             <PriceContainer>
-              <Price>€29,95</Price>
+              <Price>€25,95</Price>
               <PricePeriod>Eenmalige aankoop</PricePeriod>
             </PriceContainer>
             <FeaturesList>
@@ -254,7 +254,7 @@ const Register: React.FC = () => {
               <FeatureItem>E-mail notificaties</FeatureItem>
               <FeatureItem>24/7 klantenservice</FeatureItem>
             </FeaturesList>
-            <SelectButton onClick={() => handlePlanSelect('basic', 29.95)}>
+            <SelectButton onClick={() => handlePlanSelect('basic', 25.95)}>
               Kies Basic
             </SelectButton>
           </PricingCard>
@@ -265,7 +265,7 @@ const Register: React.FC = () => {
             <PlanName>Premium Gold</PlanName>
             <PlanDescription>3 Maanden</PlanDescription>
             <PriceContainer>
-              <Price>€79,95</Price>
+              <Price>€75,95</Price>
               <PricePeriod>Eenmalige aankoop</PricePeriod>
               <DiscountBadge>10% KORTING</DiscountBadge>
             </PriceContainer>
@@ -276,7 +276,7 @@ const Register: React.FC = () => {
               <FeatureItem>Exclusieve woningaanbiedingen</FeatureItem>
               <FeatureItem>Persoonlijke woonadvies</FeatureItem>
             </FeaturesList>
-            <SelectButton featured onClick={() => handlePlanSelect('gold', 79.95)}>
+            <SelectButton featured onClick={() => handlePlanSelect('gold', 75.95)}>
               Kies Gold
             </SelectButton>
           </PricingCard>
@@ -286,7 +286,7 @@ const Register: React.FC = () => {
             <PlanName>Premium Platinum</PlanName>
             <PlanDescription>6 Maanden</PlanDescription>
             <PriceContainer>
-              <Price>€149,95</Price>
+              <Price>€145,95</Price>
               <PricePeriod>Eenmalige aankoop</PricePeriod>
               <DiscountBadge>15% KORTING</DiscountBadge>
             </PriceContainer>
@@ -300,7 +300,7 @@ const Register: React.FC = () => {
               <FeatureItem>Gratis juridisch advies</FeatureItem>
               <FeatureItem>Persoonlijke makelaar contact</FeatureItem>
             </FeaturesList>
-            <SelectButton onClick={() => handlePlanSelect('platinum', 149.95)}>
+            <SelectButton onClick={() => handlePlanSelect('platinum', 145.95)}>
               Kies Platinum
             </SelectButton>
           </PricingCard>

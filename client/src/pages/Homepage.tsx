@@ -593,7 +593,7 @@ const Homepage: React.FC = () => {
           <CitiesGrid>
             <CityCard onClick={() => handleCityClick('amsterdam')}>
               <CityImage className="amsterdam">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Amsterdam</CityName>
@@ -606,7 +606,7 @@ const Homepage: React.FC = () => {
 
             <CityCard onClick={() => handleCityClick('rotterdam')}>
               <CityImage className="rotterdam">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Rotterdam</CityName>
@@ -619,7 +619,7 @@ const Homepage: React.FC = () => {
 
             <CityCard onClick={() => handleCityClick('den-haag')}>
               <CityImage className="den-haag">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Den Haag</CityName>
@@ -632,7 +632,7 @@ const Homepage: React.FC = () => {
 
             <CityCard onClick={() => handleCityClick('utrecht')}>
               <CityImage className="utrecht">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Utrecht</CityName>
@@ -645,7 +645,7 @@ const Homepage: React.FC = () => {
 
             <CityCard onClick={() => handleCityClick('eindhoven')}>
               <CityImage className="eindhoven">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Eindhoven</CityName>
@@ -658,7 +658,7 @@ const Homepage: React.FC = () => {
 
             <CityCard onClick={() => handleCityClick('maastricht')}>
               <CityImage className="maastricht">
-                <CountryFlag>🇳🇱 Dutch</CountryFlag>
+                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Maastricht</CityName>

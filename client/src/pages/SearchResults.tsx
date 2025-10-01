@@ -932,7 +932,7 @@ const SearchResults: React.FC = () => {
                   <PropertyTitle>{property.title}</PropertyTitle>
 
                   <CountryFlagSelect>
-                    🇳🇱 Dutch
+                    🇳🇱
                   </CountryFlagSelect>
 
                   <PropertyAddress>
