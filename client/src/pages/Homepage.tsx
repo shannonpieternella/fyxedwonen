@@ -393,7 +393,7 @@ const CityImage = styled.div`
   }
 
   &.rotterdam {
-    background-image: url('/images/cities/Rotterdam_Blick_vom_Euromast_auf_die_Erasmusbrücke_1.jpg');
+    background-image: url('/images/cities/rotterdam.jpg');
   }
 
   &.den-haag {
