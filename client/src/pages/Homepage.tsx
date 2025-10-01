@@ -393,42 +393,28 @@ const CityImage = styled.div`
   }
 
   &.amsterdam {
-    background-image: url('https://images.unsplash.com/photo-1584003564911-c2b24e819fe5?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
 
   &.rotterdam {
-    background-image: url('https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/5604693/pexels-photo-5604693.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
 
   &.den-haag {
-    background-image: url('https://images.unsplash.com/photo-1559564484-e48eef65106f?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/5409751/pexels-photo-5409751.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
 
   &.utrecht {
-    background-image: url('https://images.unsplash.com/photo-1583552907012-6af1f0e6b4f4?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/1121782/pexels-photo-1121782.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
 
   &.eindhoven {
-    background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/2524368/pexels-photo-2524368.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
 
   &.maastricht {
-    background-image: url('https://images.unsplash.com/photo-1605176889556-f5aa05af5c3d?w=400&h=300&fit=crop');
+    background-image: url('https://images.pexels.com/photos/1796715/pexels-photo-1796715.jpeg?auto=compress&cs=tinysrgb&w=600');
   }
-`;
-
-const CountryFlag = styled.div`
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-  background: white;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #4b5563;
-  z-index: 2;
-  border: 1px solid #e5e7eb;
 `;
 
 const CityInfo = styled.div`
@@ -593,7 +579,6 @@ const Homepage: React.FC = () => {
           <CitiesGrid>
             <CityCard onClick={() => handleCityClick('amsterdam')}>
               <CityImage className="amsterdam">
-                <CountryFlag>🇳🇱</CountryFlag>
               </CityImage>
               <CityInfo>
                 <CityName>Amsterdam</CityName>
@@ -605,9 +590,7 @@ const Homepage: React.FC = () => {
             </CityCard>
 
             <CityCard onClick={() => handleCityClick('rotterdam')}>
-              <CityImage className="rotterdam">
-                <CountryFlag>🇳🇱</CountryFlag>
-              </CityImage>
+              <CityImage className="rotterdam" />
               <CityInfo>
                 <CityName>Rotterdam</CityName>
                 <CityStats>
@@ -618,9 +601,7 @@ const Homepage: React.FC = () => {
             </CityCard>
 
             <CityCard onClick={() => handleCityClick('den-haag')}>
-              <CityImage className="den-haag">
-                <CountryFlag>🇳🇱</CountryFlag>
-              </CityImage>
+              <CityImage className="den-haag" />
               <CityInfo>
                 <CityName>Den Haag</CityName>
                 <CityStats>
@@ -631,9 +612,7 @@ const Homepage: React.FC = () => {
             </CityCard>
 
             <CityCard onClick={() => handleCityClick('utrecht')}>
-              <CityImage className="utrecht">
-                <CountryFlag>🇳🇱</CountryFlag>
-              </CityImage>
+              <CityImage className="utrecht" />
               <CityInfo>
                 <CityName>Utrecht</CityName>
                 <CityStats>
@@ -644,9 +623,7 @@ const Homepage: React.FC = () => {
             </CityCard>
 
             <CityCard onClick={() => handleCityClick('eindhoven')}>
-              <CityImage className="eindhoven">
-                <CountryFlag>🇳🇱</CountryFlag>
-              </CityImage>
+              <CityImage className="eindhoven" />
               <CityInfo>
                 <CityName>Eindhoven</CityName>
                 <CityStats>
@@ -657,9 +634,7 @@ const Homepage: React.FC = () => {
             </CityCard>
 
             <CityCard onClick={() => handleCityClick('maastricht')}>
-              <CityImage className="maastricht">
-                <CountryFlag>🇳🇱</CountryFlag>
-              </CityImage>
+              <CityImage className="maastricht" />
               <CityInfo>
                 <CityName>Maastricht</CityName>
                 <CityStats>
