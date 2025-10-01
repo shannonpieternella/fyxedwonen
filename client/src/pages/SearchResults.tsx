@@ -171,61 +171,28 @@ const FilterSelect = styled.select`
   }
 `;
 
-const FiltersButtonContainer = styled.div`
+const MobileFiltersContainer = styled.div`
   display: none;
 
   @media (max-width: 768px) {
-    display: flex;
-    gap: 8px;
-    margin: 16px 16px 0;
+    display: block;
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin: 12px 16px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
-`;
-
-const FiltersButton = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  cursor: pointer;
-  transition: all 0.2s;
-  flex: 1;
-
-  &:hover {
-    background: #f9fafb;
-    border-color: #38b6ff;
-  }
-
-  &.active {
-    background: #38b6ff;
-    color: white;
-    border-color: #38b6ff;
-  }
-`;
-
-const ExpandedFiltersPanel = styled.div<{ $isOpen: boolean }>`
-  display: ${props => props.$isOpen ? 'block' : 'none'};
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  margin: 16px 16px 0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   @media (min-width: 769px) {
     display: none;
   }
 `;
 
-const ExpandedFilterGroup = styled.div`
+const MobileFilterGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 
   &:last-child {
     margin-bottom: 0;
@@ -573,8 +540,6 @@ const SearchResults: React.FC = () => {
   const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -850,18 +815,8 @@ const SearchResults: React.FC = () => {
           </SearchButton>
         </SearchFormOverlay>
 
-        <FiltersButtonContainer>
-          <FiltersButton
-            type="button"
-            className={showMobileFilters ? 'active' : ''}
-            onClick={() => setShowMobileFilters(!showMobileFilters)}
-          >
-            ⚙️ Filters
-          </FiltersButton>
-        </FiltersButtonContainer>
-
-        <ExpandedFiltersPanel $isOpen={showMobileFilters}>
-          <ExpandedFilterGroup>
+        <MobileFiltersContainer>
+          <MobileFilterGroup>
             <FilterLabel>Van</FilterLabel>
             <FilterSelect name="min_prijs" value={filters.min_prijs || ''} onChange={handleFilterChange}>
               <option value="">Min prijs</option>
@@ -872,9 +827,9 @@ const SearchResults: React.FC = () => {
               <option value="1500">€ 1.500</option>
               <option value="2000">€ 2.000</option>
             </FilterSelect>
-          </ExpandedFilterGroup>
+          </MobileFilterGroup>
 
-          <ExpandedFilterGroup>
+          <MobileFilterGroup>
             <FilterLabel>Tot</FilterLabel>
             <FilterSelect name="max_prijs" value={filters.max_prijs || ''} onChange={handleFilterChange}>
               <option value="">Max prijs</option>
@@ -888,9 +843,9 @@ const SearchResults: React.FC = () => {
               <option value="5000">€ 5.000</option>
               <option value="7000">€ 7.000</option>
             </FilterSelect>
-          </ExpandedFilterGroup>
+          </MobileFilterGroup>
 
-          <ExpandedFilterGroup>
+          <MobileFilterGroup>
             <FilterLabel>Slaapkamers</FilterLabel>
             <FilterSelect name="bedrooms" value={filters.bedrooms || ''} onChange={handleFilterChange}>
               <option value="">Aantal slaapkamers</option>
@@ -899,9 +854,9 @@ const SearchResults: React.FC = () => {
               <option value="3">3 slaapkamers</option>
               <option value="4">4+ slaapkamers</option>
             </FilterSelect>
-          </ExpandedFilterGroup>
+          </MobileFilterGroup>
 
-          <ExpandedFilterGroup>
+          <MobileFilterGroup>
             <FilterLabel>Oppervlakte</FilterLabel>
             <FilterSelect name="min_size" value={filters.min_size || ''} onChange={handleFilterChange}>
               <option value="">Aantal m2</option>
@@ -911,19 +866,16 @@ const SearchResults: React.FC = () => {
               <option value="150">150+ m²</option>
               <option value="200">200+ m²</option>
             </FilterSelect>
-          </ExpandedFilterGroup>
+          </MobileFilterGroup>
 
           <SearchButton
             type="button"
-            style={{width: '100%', borderRadius: '12px', height: '48px', margin: '8px 0 0 0'}}
-            onClick={(e) => {
-              setShowMobileFilters(false);
-              applyFilters(e);
-            }}
+            style={{width: '100%', borderRadius: '12px', height: '48px', margin: '12px 0 0 0'}}
+            onClick={(e) => applyFilters(e)}
           >
             🔍 Toepassen
           </SearchButton>
-        </ExpandedFiltersPanel>
+        </MobileFiltersContainer>
       </HeroSection>
 
       <ContentSection>
