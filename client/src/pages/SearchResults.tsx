@@ -67,41 +67,6 @@ const SearchFormOverlay = styled.div`
   }
 `;
 
-const MobileActionBar = styled.div`
-  display: none;
-
-  @media (max-width: 768px) {
-    display: flex;
-    gap: 8px;
-    margin: 16px 20px 0;
-    flex-wrap: wrap;
-  }
-`;
-
-const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid #e5e7eb;
-  background: ${props => props.variant === 'primary' ? '#10b981' : 'white'};
-  color: ${props => props.variant === 'primary' ? 'white' : '#374151'};
-  cursor: pointer;
-  transition: all 0.2s;
-  flex: ${props => props.variant === 'primary' ? '1' : 'auto'};
-  min-width: fit-content;
-
-  &:hover {
-    background: ${props => props.variant === 'primary' ? '#059669' : '#f9fafb'};
-  }
-
-  .icon {
-    font-size: 16px;
-  }
-`;
 
 const FilterGroup = styled.div`
   display: flex;
@@ -140,22 +105,17 @@ const FilterLabel = styled.label`
   color: #1e293b;
   font-weight: 600;
   margin-bottom: 6px;
-  font-size: 15px;
+  font-size: 14px;
 
   @media (max-width: 768px) {
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 4px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
-    margin-bottom: 3px;
   }
 `;
 
 const FilterInput = styled.input`
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #64748b;
   background: transparent;
   outline: none;
@@ -171,17 +131,13 @@ const FilterInput = styled.input`
   }
 
   @media (max-width: 768px) {
-    font-size: 13px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
 const FilterSelect = styled.select`
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #64748b;
   background: transparent;
   outline: none;
@@ -203,15 +159,9 @@ const FilterSelect = styled.select`
   }
 
   @media (max-width: 768px) {
-    font-size: 13px;
-    background-size: 14px;
-    padding-right: 28px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
-    background-size: 12px;
-    padding-right: 24px;
+    font-size: 16px;
+    background-size: 16px;
+    padding-right: 32px;
   }
 `;
 
@@ -598,7 +548,8 @@ const SearchResults: React.FC = () => {
       if (searchParams.get('page')) params.append('page', searchParams.get('page')!);
 
       // Call real API instead of mock data
-      const response = await fetch(`http://localhost:5001/api/properties?${params.toString()}`);
+      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
+      const response = await fetch(`${API_BASE_URL}/api/properties?${params.toString()}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -748,25 +699,6 @@ const SearchResults: React.FC = () => {
               🔍
             </SearchButton>
           </SearchFormOverlay>
-
-          <MobileActionBar>
-            <ActionButton variant="primary">
-              <span className="icon">💾</span>
-              Zoekopslaan
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">⚙️</span>
-              Filters (1)
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">🔲</span>
-              Tegel
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">🗺️</span>
-              Kaart
-            </ActionButton>
-          </MobileActionBar>
         </HeroSection>
         <ContentSection>
           <Container>
@@ -847,25 +779,6 @@ const SearchResults: React.FC = () => {
             🔍
           </SearchButton>
         </SearchFormOverlay>
-
-        <MobileActionBar>
-          <ActionButton variant="primary">
-            <span className="icon">💾</span>
-            Zoekopslaan
-          </ActionButton>
-          <ActionButton>
-            <span className="icon">⚙️</span>
-            Filters (1)
-          </ActionButton>
-          <ActionButton>
-            <span className="icon">🔲</span>
-            Tegel
-          </ActionButton>
-          <ActionButton>
-            <span className="icon">🗺️</span>
-            Kaart
-          </ActionButton>
-        </MobileActionBar>
       </HeroSection>
 
       <ContentSection>
