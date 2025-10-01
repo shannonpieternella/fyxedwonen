@@ -6,7 +6,8 @@ const HeroSection = styled.section`
   background: #ffffff;
   padding: 60px 0 80px;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  width: 100%;
 `;
 
 const HeroContent = styled.div`
@@ -17,11 +18,14 @@ const HeroContent = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 60px;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 968px) {
     grid-template-columns: 1fr;
     gap: 40px;
     text-align: center;
+    padding: 0 16px;
   }
 `;
 
@@ -107,12 +111,20 @@ const TruckIllustration = styled.div`
 const SearchSection = styled.section`
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
   padding: 40px 0 60px;
+  overflow-x: hidden;
+  width: 100%;
 `;
 
 const SearchContainer = styled.div`
   max-width: 900px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
 `;
 
 const SearchForm = styled.form`
@@ -125,6 +137,8 @@ const SearchForm = styled.form`
   gap: 1px;
   align-items: center;
   border: 1px solid #f1f5f9;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 968px) {
     grid-template-columns: 2fr 1fr auto;
@@ -134,10 +148,10 @@ const SearchForm = styled.form`
   }
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 8px;
-    border-radius: 30px;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 16px;
+    border-radius: 20px;
   }
 `;
 
@@ -199,14 +213,22 @@ const FormGroup = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: 12px 16px;
+    padding: 10px 0;
 
     &:not(:last-child)::after {
       display: none;
     }
 
-    &.mobile-hidden {
-      display: none;
+    &.mobile-price {
+      border-bottom: none !important;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    &:not(:last-child):not(.mobile-price) {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
     }
   }
 `;
@@ -290,6 +312,19 @@ const Select = styled.select`
   }
 `;
 
+const MobilePriceRow = styled.div`
+  display: contents;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 12px;
+  }
+`;
+
 const SearchButton = styled.button`
   background: #38b6ff;
   color: white;
@@ -304,6 +339,8 @@ const SearchButton = styled.button`
   height: 56px;
   margin: 8px;
   box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
+  border: none;
+  cursor: pointer;
 
   &:hover {
     background: #2196f3;
@@ -312,10 +349,12 @@ const SearchButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    margin: 0;
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    margin: 12px 0 0 0;
+    font-size: 16px;
+    gap: 8px;
   }
 `;
 
@@ -323,11 +362,19 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
 `;
 
 const CitiesSection = styled.section`
   background: #f8fafc;
   padding: 60px 0;
+  overflow-x: hidden;
+  width: 100%;
 `;
 
 const SectionTitle = styled.h2`
@@ -355,8 +402,8 @@ const CitiesGrid = styled.div`
   margin-top: 40px;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 `;
 
@@ -510,42 +557,44 @@ const Homepage: React.FC = () => {
               />
             </FormGroup>
 
-            <FormGroup className="mobile-hidden">
-              <Label>Van</Label>
-              <Select
-                name="minPrice"
-                value={searchData.minPrice}
-                onChange={handleInputChange}
-              >
-                <option value="">Geen minimum</option>
-                <option value="500">€ 500</option>
-                <option value="750">€ 750</option>
-                <option value="1000">€ 1.000</option>
-                <option value="1250">€ 1.250</option>
-                <option value="1500">€ 1.500</option>
-                <option value="2000">€ 2.000</option>
-              </Select>
-            </FormGroup>
+            <MobilePriceRow>
+              <FormGroup className="mobile-price">
+                <Label>Van</Label>
+                <Select
+                  name="minPrice"
+                  value={searchData.minPrice}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Min</option>
+                  <option value="500">€ 500</option>
+                  <option value="750">€ 750</option>
+                  <option value="1000">€ 1.000</option>
+                  <option value="1250">€ 1.250</option>
+                  <option value="1500">€ 1.500</option>
+                  <option value="2000">€ 2.000</option>
+                </Select>
+              </FormGroup>
 
-            <FormGroup className="mobile-hidden">
-              <Label>Tot</Label>
-              <Select
-                name="maxPrice"
-                value={searchData.maxPrice}
-                onChange={handleInputChange}
-              >
-                <option value="">Geen maximum</option>
-                <option value="1000">€ 1.000</option>
-                <option value="1500">€ 1.500</option>
-                <option value="2000">€ 2.000</option>
-                <option value="2500">€ 2.500</option>
-                <option value="3000">€ 3.000</option>
-                <option value="3500">€ 3.500</option>
-              </Select>
-            </FormGroup>
+              <FormGroup className="mobile-price">
+                <Label>Tot</Label>
+                <Select
+                  name="maxPrice"
+                  value={searchData.maxPrice}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Max</option>
+                  <option value="1000">€ 1.000</option>
+                  <option value="1500">€ 1.500</option>
+                  <option value="2000">€ 2.000</option>
+                  <option value="2500">€ 2.500</option>
+                  <option value="3000">€ 3.000</option>
+                  <option value="3500">€ 3.500</option>
+                </Select>
+              </FormGroup>
+            </MobilePriceRow>
 
             <SearchButton type="submit">
-              🔍
+              🔍 Zoeken
             </SearchButton>
           </SearchForm>
 
