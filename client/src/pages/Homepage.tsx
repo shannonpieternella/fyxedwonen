@@ -393,27 +393,27 @@ const CityImage = styled.div`
   }
 
   &.amsterdam {
-    background-image: url('https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1584003564911-c2b24e819fe5?w=400&h=300&fit=crop');
   }
 
   &.rotterdam {
-    background-image: url('https://images.unsplash.com/photo-1555881400-74d7acaacd8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=400&h=300&fit=crop');
   }
 
   &.den-haag {
-    background-image: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1559564484-e48eef65106f?w=400&h=300&fit=crop');
   }
 
   &.utrecht {
-    background-image: url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1583552907012-6af1f0e6b4f4?w=400&h=300&fit=crop');
   }
 
   &.eindhoven {
-    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400&h=300&fit=crop');
   }
 
   &.maastricht {
-    background-image: url('https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80');
+    background-image: url('https://images.unsplash.com/photo-1605176889556-f5aa05af5c3d?w=400&h=300&fit=crop');
   }
 `;
 
