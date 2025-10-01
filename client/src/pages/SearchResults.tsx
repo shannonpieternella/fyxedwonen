@@ -585,6 +585,7 @@ const SearchResults: React.FC = () => {
     min_prijs: searchParams.get('min_prijs') ? parseInt(searchParams.get('min_prijs')!) : undefined,
     max_prijs: searchParams.get('max_prijs') ? parseInt(searchParams.get('max_prijs')!) : undefined,
     bedrooms: searchParams.get('bedrooms') ? parseInt(searchParams.get('bedrooms')!) : undefined,
+    min_size: searchParams.get('min_size') ? parseInt(searchParams.get('min_size')!) : undefined,
     page: 1,
     limit: 20,
     sort: '-createdAt'
@@ -664,7 +665,7 @@ const SearchResults: React.FC = () => {
     const { name, value } = e.target;
     setFilters(prev => ({
       ...prev,
-      [name]: value === '' ? undefined : (name.includes('prijs') || name === 'bedrooms' ? parseInt(value) : value)
+      [name]: value === '' ? undefined : (name.includes('prijs') || name === 'bedrooms' || name === 'min_size' ? parseInt(value) : value)
     }));
   };
 
@@ -716,24 +717,28 @@ const SearchResults: React.FC = () => {
             <FilterGroup className="mobile-hidden">
               <FilterLabel>Van</FilterLabel>
               <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">€ 275</option>
-                <option value="275">€ 275</option>
+                <option value="">€ 0</option>
+                <option value="0">€ 0</option>
                 <option value="500">€ 500</option>
                 <option value="750">€ 750</option>
                 <option value="1000">€ 1.000</option>
                 <option value="1500">€ 1.500</option>
+                <option value="2000">€ 2.000</option>
               </FilterSelect>
             </FilterGroup>
 
             <FilterGroup className="mobile-hidden">
               <FilterLabel>Tot</FilterLabel>
               <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">€ 3.495</option>
+                <option value="">€ 7.000</option>
                 <option value="1000">€ 1.000</option>
                 <option value="1500">€ 1.500</option>
                 <option value="2000">€ 2.000</option>
                 <option value="3000">€ 3.000</option>
                 <option value="3495">€ 3.495</option>
+                <option value="4000">€ 4.000</option>
+                <option value="5000">€ 5.000</option>
+                <option value="7000">€ 7.000</option>
               </FilterSelect>
             </FilterGroup>
 
@@ -750,12 +755,13 @@ const SearchResults: React.FC = () => {
 
             <FilterGroup className="mobile-hidden">
               <FilterLabel>Oppervlakte</FilterLabel>
-              <FilterSelect name="size" value="" onChange={handleFilterChange}>
+              <FilterSelect name="min_size" value={filters.min_size || ''} onChange={handleFilterChange}>
                 <option value="">Aantal m2</option>
                 <option value="50">50+ m²</option>
                 <option value="75">75+ m²</option>
                 <option value="100">100+ m²</option>
                 <option value="150">150+ m²</option>
+                <option value="200">200+ m²</option>
               </FilterSelect>
             </FilterGroup>
 
@@ -810,24 +816,28 @@ const SearchResults: React.FC = () => {
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Van</FilterLabel>
             <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">€ 275</option>
-              <option value="275">€ 275</option>
+              <option value="">€ 0</option>
+              <option value="0">€ 0</option>
               <option value="500">€ 500</option>
               <option value="750">€ 750</option>
               <option value="1000">€ 1.000</option>
               <option value="1500">€ 1.500</option>
+              <option value="2000">€ 2.000</option>
             </FilterSelect>
           </FilterGroup>
 
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Tot</FilterLabel>
             <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">€ 3.495</option>
+              <option value="">€ 7.000</option>
               <option value="1000">€ 1.000</option>
               <option value="1500">€ 1.500</option>
               <option value="2000">€ 2.000</option>
               <option value="3000">€ 3.000</option>
               <option value="3495">€ 3.495</option>
+              <option value="4000">€ 4.000</option>
+              <option value="5000">€ 5.000</option>
+              <option value="7000">€ 7.000</option>
             </FilterSelect>
           </FilterGroup>
 
@@ -844,12 +854,13 @@ const SearchResults: React.FC = () => {
 
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Oppervlakte</FilterLabel>
-            <FilterSelect name="size" value="" onChange={handleFilterChange}>
+            <FilterSelect name="min_size" value={filters.min_size || ''} onChange={handleFilterChange}>
               <option value="">Aantal m2</option>
               <option value="50">50+ m²</option>
               <option value="75">75+ m²</option>
               <option value="100">100+ m²</option>
               <option value="150">150+ m²</option>
+              <option value="200">200+ m²</option>
             </FilterSelect>
           </FilterGroup>
 
