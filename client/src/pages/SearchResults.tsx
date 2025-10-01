@@ -717,7 +717,7 @@ const SearchResults: React.FC = () => {
             <FilterGroup className="mobile-hidden">
               <FilterLabel>Van</FilterLabel>
               <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">€ 0</option>
+                <option value="">Min prijs</option>
                 <option value="0">€ 0</option>
                 <option value="500">€ 500</option>
                 <option value="750">€ 750</option>
@@ -730,7 +730,7 @@ const SearchResults: React.FC = () => {
             <FilterGroup className="mobile-hidden">
               <FilterLabel>Tot</FilterLabel>
               <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">€ 7.000</option>
+                <option value="">Max prijs</option>
                 <option value="1000">€ 1.000</option>
                 <option value="1500">€ 1.500</option>
                 <option value="2000">€ 2.000</option>
@@ -816,7 +816,7 @@ const SearchResults: React.FC = () => {
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Van</FilterLabel>
             <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">€ 0</option>
+              <option value="">Min prijs</option>
               <option value="0">€ 0</option>
               <option value="500">€ 500</option>
               <option value="750">€ 750</option>
@@ -829,7 +829,7 @@ const SearchResults: React.FC = () => {
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Tot</FilterLabel>
             <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">€ 7.000</option>
+              <option value="">Max prijs</option>
               <option value="1000">€ 1.000</option>
               <option value="1500">€ 1.500</option>
               <option value="2000">€ 2.000</option>
