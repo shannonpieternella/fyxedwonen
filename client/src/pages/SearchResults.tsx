@@ -30,7 +30,7 @@ const HeroSection = styled.section`
   }
 `;
 
-const SearchFormOverlay = styled.div`
+const SearchFormOverlay = styled.form`
   position: relative;
   z-index: 10;
   background: white;
@@ -44,6 +44,8 @@ const SearchFormOverlay = styled.div`
   border: 1px solid #f1f5f9;
   max-width: 1000px;
   margin: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
 
   @media (max-width: 1200px) {
     grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
@@ -59,11 +61,11 @@ const SearchFormOverlay = styled.div`
   }
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 8px;
-    border-radius: 30px;
-    margin: 0 10px;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 16px;
+    border-radius: 20px;
+    margin: 0 16px;
   }
 `;
 
@@ -93,10 +95,22 @@ const FilterGroup = styled.div`
   }
 
   @media (max-width: 768px) {
-    padding: 12px 16px;
+    padding: 10px 0;
 
-    &.mobile-hidden {
+    &:not(:last-child)::after {
       display: none;
+    }
+
+    &.mobile-price {
+      border-bottom: none !important;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    &:not(:last-child):not(.mobile-price) {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
     }
   }
 `;
@@ -165,6 +179,19 @@ const FilterSelect = styled.select`
   }
 `;
 
+const MobilePriceRow = styled.div`
+  display: contents;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 12px;
+  }
+`;
+
 const SearchButton = styled.button`
   background: #38b6ff;
   color: white;
@@ -179,11 +206,17 @@ const SearchButton = styled.button`
   height: 56px;
   margin: 8px;
   box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
+  border: none;
+  cursor: pointer;
 
   &:hover {
     background: #2196f3;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
+  }
+
+  .button-text {
+    display: none;
   }
 
   @media (max-width: 968px) {
@@ -193,11 +226,16 @@ const SearchButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    font-size: 20px;
-    margin: 0;
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    margin: 12px 0 0 0;
+    font-size: 16px;
+    gap: 8px;
+
+    .button-text {
+      display: inline;
+    }
   }
 `;
 
@@ -712,7 +750,7 @@ const SearchResults: React.FC = () => {
   return (
     <PageContainer>
       <HeroSection>
-        <SearchFormOverlay>
+        <SearchFormOverlay onSubmit={applyFilters}>
           <FilterGroup>
             <FilterLabel>Locatie</FilterLabel>
             <FilterInput
@@ -724,33 +762,35 @@ const SearchResults: React.FC = () => {
             />
           </FilterGroup>
 
-          <FilterGroup className="mobile-hidden">
-            <FilterLabel>Van</FilterLabel>
-            <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">Min prijs</option>
-              <option value="0">€ 0</option>
-              <option value="500">€ 500</option>
-              <option value="750">€ 750</option>
-              <option value="1000">€ 1.000</option>
-              <option value="1500">€ 1.500</option>
-              <option value="2000">€ 2.000</option>
-            </FilterSelect>
-          </FilterGroup>
+          <MobilePriceRow>
+            <FilterGroup className="mobile-price">
+              <FilterLabel>Van</FilterLabel>
+              <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
+                <option value="">Min</option>
+                <option value="0">€ 0</option>
+                <option value="500">€ 500</option>
+                <option value="750">€ 750</option>
+                <option value="1000">€ 1.000</option>
+                <option value="1500">€ 1.500</option>
+                <option value="2000">€ 2.000</option>
+              </FilterSelect>
+            </FilterGroup>
 
-          <FilterGroup className="mobile-hidden">
-            <FilterLabel>Tot</FilterLabel>
-            <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-              <option value="">Max prijs</option>
-              <option value="1000">€ 1.000</option>
-              <option value="1500">€ 1.500</option>
-              <option value="2000">€ 2.000</option>
-              <option value="3000">€ 3.000</option>
-              <option value="3495">€ 3.495</option>
-              <option value="4000">€ 4.000</option>
-              <option value="5000">€ 5.000</option>
-              <option value="7000">€ 7.000</option>
-            </FilterSelect>
-          </FilterGroup>
+            <FilterGroup className="mobile-price">
+              <FilterLabel>Tot</FilterLabel>
+              <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
+                <option value="">Max</option>
+                <option value="1000">€ 1.000</option>
+                <option value="1500">€ 1.500</option>
+                <option value="2000">€ 2.000</option>
+                <option value="3000">€ 3.000</option>
+                <option value="3495">€ 3.495</option>
+                <option value="4000">€ 4.000</option>
+                <option value="5000">€ 5.000</option>
+                <option value="7000">€ 7.000</option>
+              </FilterSelect>
+            </FilterGroup>
+          </MobilePriceRow>
 
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Slaapkamers</FilterLabel>
@@ -775,8 +815,8 @@ const SearchResults: React.FC = () => {
             </FilterSelect>
           </FilterGroup>
 
-          <SearchButton onClick={applyFilters}>
-            🔍
+          <SearchButton type="submit">
+            🔍<span className="button-text"> Zoeken</span>
           </SearchButton>
         </SearchFormOverlay>
       </HeroSection>

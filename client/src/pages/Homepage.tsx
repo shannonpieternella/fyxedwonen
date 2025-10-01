@@ -297,6 +297,10 @@ const SearchButton = styled.button`
     box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
   }
 
+  .button-text {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     width: 100%;
     height: 48px;
@@ -304,6 +308,10 @@ const SearchButton = styled.button`
     margin: 12px 0 0 0;
     font-size: 16px;
     gap: 8px;
+
+    .button-text {
+      display: inline;
+    }
   }
 `;
 
@@ -543,7 +551,7 @@ const Homepage: React.FC = () => {
             </MobilePriceRow>
 
             <SearchButton type="submit">
-              🔍 Zoeken
+              🔍<span className="button-text"> Zoeken</span>
             </SearchButton>
           </SearchForm>
         </SearchContainer>
