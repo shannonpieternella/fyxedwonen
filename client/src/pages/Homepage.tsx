@@ -155,42 +155,6 @@ const SearchForm = styled.form`
   }
 `;
 
-const MobileActionBar = styled.div`
-  display: none;
-
-  @media (max-width: 768px) {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 0 8px;
-    flex-wrap: wrap;
-  }
-`;
-
-const ActionButton = styled.button<{ variant?: 'primary' | 'secondary' }>`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  border: 1px solid #e5e7eb;
-  background: ${props => props.variant === 'primary' ? '#10b981' : 'white'};
-  color: ${props => props.variant === 'primary' ? 'white' : '#374151'};
-  cursor: pointer;
-  transition: all 0.2s;
-  flex: ${props => props.variant === 'primary' ? '1' : 'auto'};
-  min-width: fit-content;
-
-  &:hover {
-    background: ${props => props.variant === 'primary' ? '#059669' : '#f9fafb'};
-  }
-
-  .icon {
-    font-size: 16px;
-  }
-`;
 
 const FormGroup = styled.div`
   display: flex;
@@ -237,22 +201,17 @@ const Label = styled.label`
   color: #1e293b;
   font-weight: 600;
   margin-bottom: 6px;
-  font-size: 15px;
+  font-size: 14px;
 
   @media (max-width: 768px) {
-    font-size: 13px;
+    font-size: 14px;
     margin-bottom: 4px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
-    margin-bottom: 3px;
   }
 `;
 
 const Input = styled.input`
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #64748b;
   background: transparent;
   outline: none;
@@ -268,17 +227,13 @@ const Input = styled.input`
   }
 
   @media (max-width: 768px) {
-    font-size: 13px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
+    font-size: 16px;
   }
 `;
 
 const Select = styled.select`
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   color: #64748b;
   background: transparent;
   outline: none;
@@ -300,15 +255,9 @@ const Select = styled.select`
   }
 
   @media (max-width: 768px) {
-    font-size: 13px;
-    background-size: 14px;
-    padding-right: 28px;
-  }
-
-  @media (max-width: 480px) {
-    font-size: 12px;
-    background-size: 12px;
-    padding-right: 24px;
+    font-size: 16px;
+    background-size: 16px;
+    padding-right: 32px;
   }
 `;
 
@@ -440,27 +389,27 @@ const CityImage = styled.div`
   }
 
   &.amsterdam {
-    background-image: url('https://images.pexels.com/photos/1285625/pexels-photo-1285625.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/amsterdam-canal-netherlands-architecture-buildings-e43db9-1024.jpg');
   }
 
   &.rotterdam {
-    background-image: url('https://images.pexels.com/photos/5604693/pexels-photo-5604693.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/Rotterdam_Blick_vom_Euromast_auf_die_Erasmusbrücke_1.jpg');
   }
 
   &.den-haag {
-    background-image: url('https://images.pexels.com/photos/5409751/pexels-photo-5409751.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/Den_Haag_Skyline_1.jpg');
   }
 
   &.utrecht {
-    background-image: url('https://images.pexels.com/photos/1121782/pexels-photo-1121782.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/Stadskantoor_Utrecht._(18148413504).jpg');
   }
 
   &.eindhoven {
-    background-image: url('https://images.pexels.com/photos/2524368/pexels-photo-2524368.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/Het_station_in_zijn_omgeving_-_Eindhoven_-_20533929_-_RCE.jpg');
   }
 
   &.maastricht {
-    background-image: url('https://images.pexels.com/photos/1796715/pexels-photo-1796715.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-image: url('/images/cities/Maastricht_sunset.jpg');
   }
 `;
 
@@ -597,25 +546,6 @@ const Homepage: React.FC = () => {
               🔍 Zoeken
             </SearchButton>
           </SearchForm>
-
-          <MobileActionBar>
-            <ActionButton variant="primary">
-              <span className="icon">💾</span>
-              Zoekopslaan
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">⚙️</span>
-              Filters (0)
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">🔲</span>
-              Tegel
-            </ActionButton>
-            <ActionButton>
-              <span className="icon">🗺️</span>
-              Kaart
-            </ActionButton>
-          </MobileActionBar>
         </SearchContainer>
       </SearchSection>
 
