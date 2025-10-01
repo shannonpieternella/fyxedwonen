@@ -171,6 +171,19 @@ const BackToSite = styled(Link)`
   }
 `;
 
+const ForgotPasswordLink = styled(Link)`
+  display: block;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  text-decoration: none;
+  margin-top: 16px;
+
+  &:hover {
+    color: #38b6ff;
+  }
+`;
+
 const VerhuurderLogin: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -258,6 +271,10 @@ const VerhuurderLogin: React.FC = () => {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </Form>
+
+        <ForgotPasswordLink to="/verhuurders/forgot-password">
+          Wachtwoord vergeten?
+        </ForgotPasswordLink>
 
         <Divider>
           <span>of</span>

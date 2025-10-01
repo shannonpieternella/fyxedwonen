@@ -9,6 +9,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const Verhuurder = require('../models/Verhuurder');
 const Property = require('../models/Property');
 const Message = require('../models/Message');
+const { generateResetToken, sendPasswordResetEmail } = require('../utils/emailService');
 
 // Configure Cloudinary
 cloudinary.config({
@@ -481,6 +482,90 @@ router.put('/admin/properties/:id/reject', async (req, res) => {
     res.json({ message: 'Property afgewezen', property });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Forgot password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'E-mailadres is verplicht' });
+    }
+
+    const verhuurder = await Verhuurder.findOne({ email: email.toLowerCase() });
+
+    if (!verhuurder) {
+      // Don't reveal if verhuurder exists for security
+      return res.json({
+        message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
+      });
+    }
+
+    // Generate reset token
+    const resetToken = generateResetToken();
+
+    // Save token and expiry (1 hour)
+    verhuurder.resetPasswordToken = resetToken;
+    verhuurder.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await verhuurder.save();
+
+    // Send email
+    await sendPasswordResetEmail(email, resetToken, 'verhuurder');
+
+    res.json({
+      message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      message: 'Er is een fout opgetreden bij het versturen van de reset link.'
+    });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        message: 'Token en nieuw wachtwoord zijn verplicht'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: 'Wachtwoord moet minimaal 6 karakters lang zijn'
+      });
+    }
+
+    // Find verhuurder with valid token
+    const verhuurder = await Verhuurder.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!verhuurder) {
+      return res.status(400).json({
+        message: 'Reset link is ongeldig of verlopen'
+      });
+    }
+
+    // Update password
+    verhuurder.password = newPassword;
+    verhuurder.resetPasswordToken = undefined;
+    verhuurder.resetPasswordExpires = undefined;
+    await verhuurder.save();
+
+    res.json({ message: 'Wachtwoord succesvol gewijzigd' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      message: 'Er is een fout opgetreden bij het resetten van je wachtwoord'
+    });
   }
 });
 

@@ -53,6 +53,12 @@ const verhuurderSchema = new mongoose.Schema({
   joinDate: {
     type: Date,
     default: Date.now
+  },
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
   }
 }, {
   timestamps: true

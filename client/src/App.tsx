@@ -29,6 +29,10 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import Favorites from './pages/Favorites';
 import Conversations from './pages/Conversations';
+import ForgotPassword from './pages/ForgotPassword';
+import VerhuurderForgotPassword from './pages/verhuurders/VerhuurderForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import VerhuurderResetPassword from './pages/verhuurders/VerhuurderResetPassword';
 import GlobalStyles from './styles/GlobalStyles';
 
 const AppContainer = styled.div`
@@ -49,6 +53,8 @@ function App() {
           <Route path="/woning" element={<SearchResults />} />
           <Route path="/woning/:id" element={<PropertyDetail />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register-form" element={<RegisterForm />} />
           <Route path="/payment" element={<Payment />} />
@@ -61,6 +67,8 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/verhuurders/login" element={<VerhuurderLogin />} />
+          <Route path="/verhuurders/forgot-password" element={<VerhuurderForgotPassword />} />
+          <Route path="/verhuurders/reset-password" element={<VerhuurderResetPassword />} />
           <Route path="/verhuurders/register" element={<VerhuurderRegister />} />
           <Route path="/verhuurders/dashboard" element={<VerhuurderDashboard />} />
           <Route path="/verhuurders/add-property" element={<AddProperty />} />

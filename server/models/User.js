@@ -36,7 +36,13 @@ const UserSchema = new mongoose.Schema({
   savedProperties: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Property'
-  }]
+  }],
+  resetPasswordToken: {
+    type: String
+  },
+  resetPasswordExpires: {
+    type: Date
+  }
 }, {
   timestamps: true
 });

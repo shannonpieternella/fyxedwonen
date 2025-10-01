@@ -160,6 +160,19 @@ const RegisterPrompt = styled.div`
   }
 `;
 
+const ForgotPasswordLink = styled(Link)`
+  display: block;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  text-decoration: none;
+  margin-top: 16px;
+
+  &:hover {
+    color: #38b6ff;
+  }
+`;
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -252,6 +265,10 @@ const Login: React.FC = () => {
 
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </Form>
+
+        <ForgotPasswordLink to="/forgot-password">
+          Wachtwoord vergeten?
+        </ForgotPasswordLink>
 
         <Divider>
           <span>of</span>

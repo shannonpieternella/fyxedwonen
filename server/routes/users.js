@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { generateResetToken, sendPasswordResetEmail } = require('../utils/emailService');
 
 router.post('/register', async (req, res) => {
   try {
@@ -75,6 +76,90 @@ router.post('/login', async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Forgot password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'E-mailadres is verplicht' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      // Don't reveal if user exists for security
+      return res.json({
+        message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
+      });
+    }
+
+    // Generate reset token
+    const resetToken = generateResetToken();
+
+    // Save token and expiry (1 hour)
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // Send email
+    await sendPasswordResetEmail(email, resetToken, 'user');
+
+    res.json({
+      message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
+    });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      message: 'Er is een fout opgetreden bij het versturen van de reset link.'
+    });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        message: 'Token en nieuw wachtwoord zijn verplicht'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        message: 'Wachtwoord moet minimaal 6 karakters lang zijn'
+      });
+    }
+
+    // Find user with valid token
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: 'Reset link is ongeldig of verlopen'
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ message: 'Wachtwoord succesvol gewijzigd' });
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      message: 'Er is een fout opgetreden bij het resetten van je wachtwoord'
+    });
   }
 });
 
