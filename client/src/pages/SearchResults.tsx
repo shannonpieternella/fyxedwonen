@@ -634,14 +634,15 @@ const SearchResults: React.FC = () => {
     }));
   };
 
-  const applyFilters = (e: React.FormEvent) => {
-    e.preventDefault();
+  const applyFilters = (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
     const params = new URLSearchParams();
 
-    if (filters.city) params.append('woningplaats', filters.city);
+    if (filters.city) params.append('woningplaats', filters.city.toLowerCase());
     if (filters.min_prijs) params.append('min_prijs', filters.min_prijs.toString());
     if (filters.max_prijs) params.append('max_prijs', filters.max_prijs.toString());
     if (filters.bedrooms) params.append('bedrooms', filters.bedrooms.toString());
+    if (filters.min_size) params.append('min_size', filters.min_size.toString());
     if (filters.sort) params.append('sort', filters.sort);
 
     navigate(`/woning?${params.toString()}`);
@@ -818,7 +819,7 @@ const SearchResults: React.FC = () => {
         <MobileFiltersContainer>
           <MobileFilterGroup>
             <FilterLabel>Van</FilterLabel>
-            <FilterSelect name="min_prijs" value={filters.min_prijs || ''} onChange={handleFilterChange}>
+            <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
               <option value="">Min prijs</option>
               <option value="0">€ 0</option>
               <option value="500">€ 500</option>
@@ -831,7 +832,7 @@ const SearchResults: React.FC = () => {
 
           <MobileFilterGroup>
             <FilterLabel>Tot</FilterLabel>
-            <FilterSelect name="max_prijs" value={filters.max_prijs || ''} onChange={handleFilterChange}>
+            <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
               <option value="">Max prijs</option>
               <option value="1000">€ 1.000</option>
               <option value="1500">€ 1.500</option>
@@ -847,7 +848,7 @@ const SearchResults: React.FC = () => {
 
           <MobileFilterGroup>
             <FilterLabel>Slaapkamers</FilterLabel>
-            <FilterSelect name="bedrooms" value={filters.bedrooms || ''} onChange={handleFilterChange}>
+            <FilterSelect name="bedrooms" value={filters.bedrooms || searchParams.get('bedrooms') || ''} onChange={handleFilterChange}>
               <option value="">Aantal slaapkamers</option>
               <option value="1">1 slaapkamer</option>
               <option value="2">2 slaapkamers</option>
@@ -858,7 +859,7 @@ const SearchResults: React.FC = () => {
 
           <MobileFilterGroup>
             <FilterLabel>Oppervlakte</FilterLabel>
-            <FilterSelect name="min_size" value={filters.min_size || ''} onChange={handleFilterChange}>
+            <FilterSelect name="min_size" value={filters.min_size || searchParams.get('min_size') || ''} onChange={handleFilterChange}>
               <option value="">Aantal m2</option>
               <option value="50">50+ m²</option>
               <option value="75">75+ m²</option>
@@ -871,7 +872,7 @@ const SearchResults: React.FC = () => {
           <SearchButton
             type="button"
             style={{width: '100%', borderRadius: '12px', height: '48px', margin: '12px 0 0 0'}}
-            onClick={(e) => applyFilters(e)}
+            onClick={applyFilters}
           >
             🔍 Toepassen
           </SearchButton>
@@ -911,7 +912,13 @@ const SearchResults: React.FC = () => {
               >
                 <PropertyImageContainer>
                   {property.images && property.images[0] ? (
-                    <PropertyImage src={property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5001${property.images[0]}`} alt={property.title} />
+                    <PropertyImage
+                      src={property.images[0].startsWith('http')
+                        ? property.images[0]
+                        : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${property.images[0]}`
+                      }
+                      alt={property.title}
+                    />
                   ) : (
                     <PropertyImagePlaceholder>🏠</PropertyImagePlaceholder>
                   )}
