@@ -54,7 +54,7 @@ const Nav = styled.nav<{ isOpen?: boolean }>`
   align-items: center;
   gap: 30px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: ${props => props.isOpen ? 'flex' : 'none'};
     position: absolute;
     top: 70px;
@@ -194,7 +194,7 @@ const LogoutButton = styled.button`
 `;
 
 const MobileMenuButton = styled.button`
-  display: flex; /* always visible */
+  display: none;
   flex-direction: column;
   gap: 5px;
   padding: 10px;
@@ -208,6 +208,10 @@ const MobileMenuButton = styled.button`
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   touch-action: manipulation;
+
+  @media (max-width: 1024px) {
+    display: flex;
+  }
 
   span {
     display: block;

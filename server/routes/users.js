@@ -105,16 +105,22 @@ router.post('/forgot-password', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Send email
-    await sendPasswordResetEmail(email, resetToken, 'user');
+    // Send email (do not reveal failures to client)
+    try {
+      await sendPasswordResetEmail(email, resetToken, 'user');
+    } catch (mailErr) {
+      console.error('sendPasswordResetEmail failed:', mailErr?.message || mailErr);
+      // Continue with generic success response to avoid user enumeration/leakage
+    }
 
     res.json({
       message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
     });
   } catch (error) {
     console.error('Forgot password error:', error);
-    res.status(500).json({
-      message: 'Er is een fout opgetreden bij het versturen van de reset link.'
+    // Always respond generically to avoid leaking whether address exists
+    res.json({
+      message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'
     });
   }
 });
