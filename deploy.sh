@@ -9,9 +9,8 @@ echo "🚀 Starting deployment to fyxedwonen.nl..."
 SERVER_USER="root"
 SERVER_IP="128.140.109.71"
 SSH_KEY="$HOME/.ssh/id_rsa"
-REPO_URL="https://github.com/shannonpieternella/fyxedwonen.git"
 
-# Build the React app
+# Build the React app locally
 echo "📦 Building React app..."
 cd client
 npm run build
@@ -23,20 +22,25 @@ fi
 
 echo "✅ Build successful!"
 
-# Deploy to Hetzner server
-echo "📤 Deploying to Hetzner server..."
-ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" << 'EOF'
-    cd /var/www/fyxedwonen || exit 1
-    git pull origin master
-    cd client
-    npm install
-    npm run build
-    echo "✅ Deployment complete!"
-EOF
+# Upload build files to server
+echo "📤 Uploading build files to Hetzner server..."
+cd ..
+scp -i "$SSH_KEY" -r client/build/* "$SERVER_USER@$SERVER_IP:/var/www/fyxedwonen/client/build/"
+
+if [ $? -ne 0 ]; then
+    echo "❌ Upload failed!"
+    exit 1
+fi
+
+echo "✅ Upload successful!"
+
+# Reload nginx
+echo "🔄 Reloading nginx..."
+ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" 'systemctl reload nginx'
 
 if [ $? -eq 0 ]; then
     echo "🎉 Deployment to fyxedwonen.nl completed successfully!"
 else
-    echo "❌ Deployment failed!"
+    echo "❌ Nginx reload failed!"
     exit 1
 fi
