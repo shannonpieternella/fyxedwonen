@@ -694,7 +694,8 @@ const PropertyDetail: React.FC = () => {
       }
 
       // Send message to API
-      const response = await fetch('http://localhost:5001/api/properties/contact', {
+      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
+      const response = await fetch(`${API_BASE_URL}/api/properties/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -776,7 +777,8 @@ const PropertyDetail: React.FC = () => {
       setLoading(true);
 
       // Call real API instead of mock data
-      const response = await fetch(`http://localhost:5001/api/properties/${propertyId}`);
+      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
+      const response = await fetch(`${API_BASE_URL}/api/properties/${propertyId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -822,7 +824,10 @@ const PropertyDetail: React.FC = () => {
               <div>
                 <PhotoGalleryContainer>
                   <PropertyImage
-                    src={property.images[currentImageIndex].startsWith('http') ? property.images[currentImageIndex] : `http://localhost:5001${property.images[currentImageIndex]}`}
+                    src={property.images[currentImageIndex].startsWith('http')
+                      ? property.images[currentImageIndex]
+                      : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${property.images[currentImageIndex]}`
+                    }
                     alt={`${property.title} - foto ${currentImageIndex + 1}`}
                   />
 
@@ -862,7 +867,10 @@ const PropertyDetail: React.FC = () => {
                     {property.images.map((image, index) => (
                       <ThumbnailImage
                         key={index}
-                        src={image.startsWith('http') ? image : `http://localhost:5001${image}`}
+                        src={image.startsWith('http')
+                          ? image
+                          : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${image}`
+                        }
                         alt={`Thumbnail ${index + 1}`}
                         active={index === currentImageIndex}
                         onClick={() => goToImage(index)}
