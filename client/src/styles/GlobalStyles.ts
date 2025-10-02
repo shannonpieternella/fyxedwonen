@@ -26,6 +26,7 @@ const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     color: #333;
     line-height: 1.6;
+    padding-top: 70px; /* offset for fixed header */
   }
 
   a {

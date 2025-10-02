@@ -602,7 +602,9 @@ const PropertyDetail: React.FC = () => {
   const navigate = useNavigate();
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
+  // hasAccess = betaald of verhuurder; isAuthenticated = ingelogd (ook zonder betaling)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showContactForm, setShowContactForm] = useState(false);
   const [contactMessage, setContactMessage] = useState('');
@@ -620,7 +622,8 @@ const PropertyDetail: React.FC = () => {
       const paymentCompleted = localStorage.getItem('paymentCompleted') === 'true';
       const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
 
-      // User is considered logged in if they're either a regular user with payment OR a verhuurder
+      setIsAuthenticated(loggedIn || verhuurderLoggedIn);
+      // Has access only if paid (or verhuurder)
       setIsLoggedIn((loggedIn && paymentCompleted) || verhuurderLoggedIn);
     };
 
@@ -852,7 +855,7 @@ const PropertyDetail: React.FC = () => {
 
                   {!isLoggedIn && (
                     <ImageOverlay>
-                      Inloggen voor meer foto's
+                      {isAuthenticated ? "Alleen voor Premium" : "Inloggen voor meer foto's"}
                     </ImageOverlay>
                   )}
                 </PhotoGalleryContainer>
@@ -876,7 +879,7 @@ const PropertyDetail: React.FC = () => {
                 <PropertyImagePlaceholder>🏠</PropertyImagePlaceholder>
                 {!isLoggedIn && (
                   <ImageOverlay>
-                    Inloggen voor meer foto's
+                    {isAuthenticated ? "Alleen voor Premium" : "Inloggen voor meer foto's"}
                   </ImageOverlay>
                 )}
               </PropertyImageContainer>
@@ -957,7 +960,13 @@ const PropertyDetail: React.FC = () => {
                   Je kunt niet reageren op deze woning.
                 </LoginText>
                 <AuthLinks>
-                  <button onClick={() => navigate('/login')}>Inloggen</button> | <button onClick={() => navigate('/register')}>Registreren</button>.
+                  {isAuthenticated ? (
+                    <button onClick={() => navigate('/register')}>Upgrade naar Premium</button>
+                  ) : (
+                    <>
+                      <button onClick={() => navigate('/login')}>Inloggen</button> | <button onClick={() => navigate('/register')}>Registreren</button>.
+                    </>
+                  )}
                 </AuthLinks>
               </LoginPromptBox>
             ) : (
@@ -1042,7 +1051,13 @@ const PropertyDetail: React.FC = () => {
                 </FeatureItem>
                 <FeatureItem>
                   <FeatureLabel>Aangeboden sinds</FeatureLabel>
-                  <LoginFeatureValue onClick={() => navigate('/login')}>Log in om te bekijken</LoginFeatureValue>
+                  {isLoggedIn ? (
+                    <FeatureValue>{new Date((property as any).createdAt || Date.now()).toLocaleDateString('nl-NL')}</FeatureValue>
+                  ) : isAuthenticated ? (
+                    <FeatureValue>Alleen voor Premium</FeatureValue>
+                  ) : (
+                    <LoginFeatureValue onClick={() => navigate('/login')}>Log in om te bekijken</LoginFeatureValue>
+                  )}
                 </FeatureItem>
                 <FeatureItem>
                   <FeatureLabel>Status</FeatureLabel>

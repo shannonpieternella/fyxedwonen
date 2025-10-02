@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const HeaderContainer = styled.header`
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 1000;
   width: 100%;
