@@ -53,18 +53,18 @@ const SearchFormOverlay = styled.form`
   }
 
   @media (max-width: 968px) {
-    grid-template-columns: 2fr 1fr 1fr auto;
-    gap: 4px;
-    padding: 6px;
-    border-radius: 40px;
-    margin: 0 15px;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 50px;
+    margin: 0 16px;
   }
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr auto;
-    gap: 8px;
-    padding: 12px;
-    border-radius: 16px;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 50px;
     margin: 0 16px;
   }
 `;
@@ -87,22 +87,14 @@ const FilterGroup = styled.div<{ $hideOnMobile?: boolean }>`
   }
 
   @media (max-width: 968px) {
-    padding: 12px 8px;
-
-    &:not(:last-child)::after {
-      display: none;
+    &.mobile-hidden {
+      display: none !important;
     }
   }
 
   @media (max-width: 768px) {
-    padding: 12px 0;
-
-    &:not(:last-child)::after {
-      display: none;
-    }
-
     &.mobile-hidden {
-      display: none;
+      display: none !important;
     }
   }
 `;
@@ -236,9 +228,11 @@ const SearchButton = styled.button`
   }
 
   @media (max-width: 968px) {
-    width: 100%;
-    border-radius: 12px;
+    width: 48px;
     height: 48px;
+    border-radius: 50%;
+    margin: 0;
+    font-size: 18px;
   }
 
   @media (max-width: 768px) {
