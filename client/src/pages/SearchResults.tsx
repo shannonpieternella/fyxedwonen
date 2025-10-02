@@ -53,19 +53,20 @@ const SearchFormOverlay = styled.form`
   }
 
   @media (max-width: 968px) {
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-    padding: 10px 16px;
-    border-radius: 50px;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 40px;
     margin: 0 16px;
   }
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-    padding: 10px 16px;
-    border-radius: 50px;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 16px;
+    border-radius: 20px;
     margin: 0 16px;
+    max-width: 600px;
   }
 `;
 
@@ -87,12 +88,32 @@ const FilterGroup = styled.div<{ $hideOnMobile?: boolean }>`
   }
 
   @media (max-width: 968px) {
+    padding: 12px 16px;
+
     &.mobile-hidden {
       display: none !important;
     }
   }
 
   @media (max-width: 768px) {
+    padding: 10px 0;
+
+    &:not(:last-child)::after {
+      display: none;
+    }
+
+    &.mobile-price {
+      border-bottom: none !important;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    &:not(:last-child):not(.mobile-price) {
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
     &.mobile-hidden {
       display: none !important;
     }
@@ -106,9 +127,8 @@ const FilterLabel = styled.label`
   font-size: 14px;
 
   @media (max-width: 768px) {
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 4px;
-    color: #64748b;
   }
 `;
 
@@ -158,50 +178,27 @@ const FilterSelect = styled.select`
   }
 
   @media (max-width: 768px) {
-    font-size: 14px;
-    background-size: 14px;
-    padding-right: 28px;
-    padding: 8px 28px 8px 12px;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    color: #1e293b;
-    font-weight: 500;
+    font-size: 16px;
+    background-size: 16px;
+    padding-right: 32px;
+  }
+`;
+
+const MobilePriceRow = styled.div`
+  display: contents;
+
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 12px;
   }
 `;
 
 const MobileFiltersContainer = styled.div`
   display: none;
-
-  @media (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
-    margin: 0 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f1f5f9;
-    position: relative;
-    top: -20px;
-  }
-
-  @media (min-width: 769px) {
-    display: none;
-  }
-`;
-
-const MobileFilterRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-`;
-
-const MobileFilterGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 `;
 
 const SearchButton = styled.button`
@@ -227,6 +224,10 @@ const SearchButton = styled.button`
     box-shadow: 0 6px 20px rgba(56, 182, 255, 0.4);
   }
 
+  .button-text {
+    display: none;
+  }
+
   @media (max-width: 968px) {
     width: 48px;
     height: 48px;
@@ -236,11 +237,16 @@ const SearchButton = styled.button`
   }
 
   @media (max-width: 768px) {
-    width: 48px;
+    width: 100%;
     height: 48px;
-    border-radius: 50%;
-    margin: 0;
-    font-size: 18px;
+    border-radius: 12px;
+    margin: 12px 0 0 0;
+    font-size: 16px;
+    gap: 8px;
+
+    .button-text {
+      display: inline;
+    }
   }
 `;
 
@@ -795,9 +801,37 @@ const SearchResults: React.FC = () => {
             </FilterSelect>
           </FilterGroup>
 
+          <MobilePriceRow>
+            <FilterGroup className="mobile-price">
+              <FilterLabel>Van</FilterLabel>
+              <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
+                <option value="">Min</option>
+                <option value="500">€ 500</option>
+                <option value="750">€ 750</option>
+                <option value="1000">€ 1.000</option>
+                <option value="1250">€ 1.250</option>
+                <option value="1500">€ 1.500</option>
+                <option value="2000">€ 2.000</option>
+              </FilterSelect>
+            </FilterGroup>
+
+            <FilterGroup className="mobile-price">
+              <FilterLabel>Tot</FilterLabel>
+              <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
+                <option value="">Max</option>
+                <option value="1000">€ 1.000</option>
+                <option value="1500">€ 1.500</option>
+                <option value="2000">€ 2.000</option>
+                <option value="2500">€ 2.500</option>
+                <option value="3000">€ 3.000</option>
+                <option value="3500">€ 3.500</option>
+              </FilterSelect>
+            </FilterGroup>
+          </MobilePriceRow>
+
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Slaapkamers</FilterLabel>
-            <FilterSelect name="bedrooms" value={filters.bedrooms || ''} onChange={handleFilterChange}>
+            <FilterSelect name="bedrooms" value={filters.bedrooms || searchParams.get('bedrooms') || ''} onChange={handleFilterChange}>
               <option value="">Aantal slaapkamers</option>
               <option value="1">1 slaapkamer</option>
               <option value="2">2 slaapkamers</option>
@@ -808,7 +842,7 @@ const SearchResults: React.FC = () => {
 
           <FilterGroup className="mobile-hidden">
             <FilterLabel>Oppervlakte</FilterLabel>
-            <FilterSelect name="min_size" value={filters.min_size || ''} onChange={handleFilterChange}>
+            <FilterSelect name="min_size" value={filters.min_size || searchParams.get('min_size') || ''} onChange={handleFilterChange}>
               <option value="">Aantal m2</option>
               <option value="50">50+ m²</option>
               <option value="75">75+ m²</option>
@@ -819,74 +853,9 @@ const SearchResults: React.FC = () => {
           </FilterGroup>
 
           <SearchButton type="submit">
-            🔍
+            🔍<span className="button-text"> Zoeken</span>
           </SearchButton>
         </SearchFormOverlay>
-
-        <MobileFiltersContainer>
-          <MobileFilterRow>
-            <MobileFilterGroup>
-              <FilterLabel>Prijs van</FilterLabel>
-              <FilterSelect name="min_prijs" value={filters.min_prijs || searchParams.get('min_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">Min</option>
-                <option value="0">€ 0</option>
-                <option value="500">€ 500</option>
-                <option value="750">€ 750</option>
-                <option value="1000">€ 1.000</option>
-                <option value="1500">€ 1.500</option>
-                <option value="2000">€ 2.000</option>
-              </FilterSelect>
-            </MobileFilterGroup>
-
-            <MobileFilterGroup>
-              <FilterLabel>Prijs tot</FilterLabel>
-              <FilterSelect name="max_prijs" value={filters.max_prijs || searchParams.get('max_prijs') || ''} onChange={handleFilterChange}>
-                <option value="">Max</option>
-                <option value="1000">€ 1.000</option>
-                <option value="1500">€ 1.500</option>
-                <option value="2000">€ 2.000</option>
-                <option value="2500">€ 2.500</option>
-                <option value="3000">€ 3.000</option>
-                <option value="3500">€ 3.500</option>
-                <option value="4000">€ 4.000</option>
-                <option value="5000">€ 5.000</option>
-              </FilterSelect>
-            </MobileFilterGroup>
-          </MobileFilterRow>
-
-          <MobileFilterRow>
-            <MobileFilterGroup>
-              <FilterLabel>Slaapkamers</FilterLabel>
-              <FilterSelect name="bedrooms" value={filters.bedrooms || searchParams.get('bedrooms') || ''} onChange={handleFilterChange}>
-                <option value="">Alle</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4+</option>
-              </FilterSelect>
-            </MobileFilterGroup>
-
-            <MobileFilterGroup>
-              <FilterLabel>Min. m²</FilterLabel>
-              <FilterSelect name="min_size" value={filters.min_size || searchParams.get('min_size') || ''} onChange={handleFilterChange}>
-                <option value="">Alle</option>
-                <option value="50">50+</option>
-                <option value="75">75+</option>
-                <option value="100">100+</option>
-                <option value="150">150+</option>
-                <option value="200">200+</option>
-              </FilterSelect>
-            </MobileFilterGroup>
-          </MobileFilterRow>
-
-          <SearchButton
-            type="button"
-            style={{width: '100%', borderRadius: '8px', height: '44px', margin: '4px 0 0 0', fontSize: '15px'}}
-            onClick={applyFilters}
-          >
-            🔍 Toepassen
-          </SearchButton>
-        </MobileFiltersContainer>
       </HeroSection>
 
       <ContentSection>
