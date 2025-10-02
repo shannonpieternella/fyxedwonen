@@ -46,14 +46,9 @@ const ContentSection = styled.section`
 
 const ContactGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  grid-template-columns: 1fr;
+  gap: 40px;
   margin-bottom: 80px;
-
-  @media (max-width: 968px) {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
 `;
 
 const ContactInfo = styled.div``;
@@ -377,95 +372,7 @@ const Contact: React.FC = () => {
             </ContactDetails>
           </ContactInfo>
 
-          <ContactForm onSubmit={handleSubmit}>
-            <FormTitle>Stuur ons een bericht</FormTitle>
-
-            {success && (
-              <SuccessMessage>
-                Bedankt voor je bericht! We nemen zo snel mogelijk contact op.
-              </SuccessMessage>
-            )}
-
-            <FormGrid>
-              <InputGroup>
-                <Label htmlFor="firstName">Voornaam *</Label>
-                <Input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-              </InputGroup>
-
-              <InputGroup>
-                <Label htmlFor="lastName">Achternaam *</Label>
-                <Input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                />
-              </InputGroup>
-            </FormGrid>
-
-            <FormGrid>
-              <InputGroup>
-                <Label htmlFor="email">E-mailadres *</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </InputGroup>
-
-              <InputGroup>
-                <Label htmlFor="phone">Telefoonnummer</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </FormGrid>
-
-            <InputGroup>
-              <Label htmlFor="subject">Onderwerp *</Label>
-              <Input
-                id="subject"
-                name="subject"
-                type="text"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="Waar kunnen we je mee helpen?"
-                required
-              />
-            </InputGroup>
-
-            <InputGroup>
-              <Label htmlFor="message">Bericht *</Label>
-              <TextArea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Vertel ons meer over je vraag..."
-                required
-              />
-            </InputGroup>
-
-            <SubmitButton type="submit" disabled={loading}>
-              {loading ? 'Verzenden...' : 'Bericht Verzenden'}
-            </SubmitButton>
-          </ContactForm>
+          {/* Contactformulier verwijderd op verzoek */}
         </ContactGrid>
       </ContentSection>
 
@@ -481,7 +388,7 @@ const Contact: React.FC = () => {
             <InfoText>
               KvK: 97975354<br />
               BTW: NL850628441B01<br />
-              Fyxed Wonen B.V.
+              Fyxed B.V.
             </InfoText>
           </InfoCard>
 

@@ -192,7 +192,6 @@ const Footer: React.FC = () => {
           <FooterSection>
             <FooterTitle>Contact</FooterTitle>
             <ContactInfo>
-              +31 26 123 4567<br />
               wonen@fyxedbv.nl<br />
               <br />
               Ma-Vr: 09:00 - 18:00<br />
