@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -160,7 +161,7 @@ const ForgotPassword: React.FC = () => {
 
     try {
       // API call to backend for password reset
-      const response = await fetch('http://localhost:5001/api/users/forgot-password', {
+      const response = await fetch(`${API_BASE_URL}/users/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

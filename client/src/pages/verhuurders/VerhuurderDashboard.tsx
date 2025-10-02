@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL, API_ORIGIN } from '../../services/api';
 
 const DashboardContainer = styled.div`
   min-height: 100vh;
@@ -299,7 +300,7 @@ const VerhuurderDashboard: React.FC = () => {
       const token = localStorage.getItem('verhuurderToken');
 
       // Fetch dashboard stats
-      const dashboardResponse = await fetch('http://localhost:5001/api/verhuurders/dashboard', {
+      const dashboardResponse = await fetch(`${API_BASE_URL}/verhuurders/dashboard`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -313,7 +314,7 @@ const VerhuurderDashboard: React.FC = () => {
       }
 
       // Fetch all properties
-      const propertiesResponse = await fetch('http://localhost:5001/api/verhuurders/properties', {
+      const propertiesResponse = await fetch(`${API_BASE_URL}/verhuurders/properties`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -325,7 +326,7 @@ const VerhuurderDashboard: React.FC = () => {
       }
 
       // Fetch all messages
-      const messagesResponse = await fetch('http://localhost:5001/api/verhuurders/messages', {
+      const messagesResponse = await fetch(`${API_BASE_URL}/verhuurders/messages`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -354,7 +355,7 @@ const VerhuurderDashboard: React.FC = () => {
     try {
       const token = localStorage.getItem('verhuurderToken');
 
-      await fetch(`http://localhost:5001/api/verhuurders/messages/${messageId}/read`, {
+      await fetch(`${API_BASE_URL}/verhuurders/messages/${messageId}/read`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -384,7 +385,7 @@ const VerhuurderDashboard: React.FC = () => {
     try {
       const token = localStorage.getItem('verhuurderToken');
 
-      const response = await fetch(`http://localhost:5001/api/verhuurders/properties/${propertyId}`, {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/properties/${propertyId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

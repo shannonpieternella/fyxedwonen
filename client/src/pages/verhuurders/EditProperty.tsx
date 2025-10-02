@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL, API_ORIGIN } from '../../services/api';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -334,7 +335,7 @@ const EditProperty: React.FC = () => {
   const fetchProperty = async () => {
     try {
       const token = localStorage.getItem('verhuurderToken');
-      const response = await fetch(`http://localhost:5001/api/verhuurders/properties`, {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/properties`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -451,7 +452,7 @@ const EditProperty: React.FC = () => {
         formDataToSend.append('images', file);
       });
 
-      const response = await fetch(`http://localhost:5001/api/verhuurders/properties/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/properties/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -695,7 +696,7 @@ const EditProperty: React.FC = () => {
               {/* Current Images */}
               {currentImages.map((image, index) => (
                 <PhotoItem key={`current-${index}`}>
-                  <PhotoPreview src={image.startsWith('http') ? image : `http://localhost:5001${image}`} alt={`Property foto ${index + 1}`} />
+                  <PhotoPreview src={image.startsWith('http') ? image : `${API_ORIGIN}${image}`} alt={`Property foto ${index + 1}`} />
                   <DeleteButton onClick={() => removeCurrentImage(index)}>
                     ×
                   </DeleteButton>

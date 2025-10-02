@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../../services/api';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -361,7 +362,7 @@ const AddProperty: React.FC = () => {
         images: [] // TODO: Add image upload functionality
       };
 
-      const response = await fetch('http://localhost:5001/api/verhuurders/properties', {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/properties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

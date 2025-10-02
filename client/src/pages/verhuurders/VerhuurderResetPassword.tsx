@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -191,7 +192,7 @@ const VerhuurderResetPassword: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/verhuurders/reset-password', {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { propertyApi } from '../services/api';
+import { propertyApi, API_BASE_URL, API_ORIGIN } from '../services/api';
 import { Property, SearchFilters } from '../types';
 
 const PageContainer = styled.div`
@@ -596,8 +596,7 @@ const SearchResults: React.FC = () => {
       if (searchParams.get('page')) params.append('page', searchParams.get('page')!);
 
       // Call real API instead of mock data
-      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
-      const response = await fetch(`${API_BASE_URL}/api/properties?${params.toString()}`);
+      const response = await fetch(`${API_BASE_URL}/properties?${params.toString()}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -893,10 +892,7 @@ const SearchResults: React.FC = () => {
                 <PropertyImageContainer>
                   {property.images && property.images[0] ? (
                     <PropertyImage
-                      src={property.images[0].startsWith('http')
-                        ? property.images[0]
-                        : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${property.images[0]}`
-                      }
+                      src={property.images[0].startsWith('http') ? property.images[0] : `${API_ORIGIN}${property.images[0]}`}
                       alt={property.title}
                     />
                   ) : (

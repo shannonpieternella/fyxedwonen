@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../../services/api';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -350,8 +351,8 @@ const AdminDashboard: React.FC = () => {
     try {
       setLoading(true);
       const endpoint = viewMode === 'pending'
-        ? 'http://localhost:5001/api/verhuurders/admin/properties/pending'
-        : 'http://localhost:5001/api/verhuurders/admin/properties/all';
+        ? `${API_BASE_URL}/verhuurders/admin/properties/pending`
+        : `${API_BASE_URL}/verhuurders/admin/properties/all`;
 
       const response = await fetch(endpoint);
       if (response.ok) {
@@ -367,7 +368,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchAllProperties = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/verhuurders/admin/properties/all');
+      const response = await fetch(`${API_BASE_URL}/verhuurders/admin/properties/all`);
       if (response.ok) {
         const data = await response.json();
         setAllProperties(data);
@@ -379,7 +380,7 @@ const AdminDashboard: React.FC = () => {
 
   const handleApprove = async (propertyId: string) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/verhuurders/admin/properties/${propertyId}/approve`, {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/admin/properties/${propertyId}/approve`, {
         method: 'PUT'
       });
 
@@ -408,7 +409,7 @@ const AdminDashboard: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/verhuurders/admin/properties/${rejectModal.property._id}/reject`, {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/admin/properties/${rejectModal.property._id}/reject`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

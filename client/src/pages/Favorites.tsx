@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_ORIGIN } from '../services/api';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -328,7 +329,7 @@ const Favorites: React.FC = () => {
                 <PropertyImageContainer>
                   {property.images && property.images[0] ? (
                     <PropertyImage
-                      src={property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5001${property.images[0]}`}
+                      src={property.images[0].startsWith('http') ? property.images[0] : `${API_ORIGIN}${property.images[0]}`}
                       alt={property.title}
                     />
                   ) : (

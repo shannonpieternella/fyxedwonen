@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { propertyApi } from '../services/api';
+import { propertyApi, API_BASE_URL, API_ORIGIN } from '../services/api';
 import { Property } from '../types';
 
 const PageContainer = styled.div`
@@ -694,8 +694,7 @@ const PropertyDetail: React.FC = () => {
       }
 
       // Send message to API
-      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
-      const response = await fetch(`${API_BASE_URL}/api/properties/contact`, {
+      const response = await fetch(`${API_BASE_URL}/properties/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -777,8 +776,7 @@ const PropertyDetail: React.FC = () => {
       setLoading(true);
 
       // Call real API instead of mock data
-      const API_BASE_URL = process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl');
-      const response = await fetch(`${API_BASE_URL}/api/properties/${propertyId}`);
+      const response = await fetch(`${API_BASE_URL}/properties/${propertyId}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -824,10 +822,7 @@ const PropertyDetail: React.FC = () => {
               <div>
                 <PhotoGalleryContainer>
                   <PropertyImage
-                    src={property.images[currentImageIndex].startsWith('http')
-                      ? property.images[currentImageIndex]
-                      : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${property.images[currentImageIndex]}`
-                    }
+                    src={property.images[currentImageIndex].startsWith('http') ? property.images[currentImageIndex] : `${API_ORIGIN}${property.images[currentImageIndex]}`}
                     alt={`${property.title} - foto ${currentImageIndex + 1}`}
                   />
 
@@ -867,10 +862,7 @@ const PropertyDetail: React.FC = () => {
                     {property.images.map((image, index) => (
                       <ThumbnailImage
                         key={index}
-                        src={image.startsWith('http')
-                          ? image
-                          : `${process.env.REACT_APP_API_URL || (window.location.hostname === 'localhost' ? 'http://localhost:5001' : 'https://fyxedwonen.nl')}${image}`
-                        }
+                        src={image.startsWith('http') ? image : `${API_ORIGIN}${image}`}
                         alt={`Thumbnail ${index + 1}`}
                         active={index === currentImageIndex}
                         onClick={() => goToImage(index)}

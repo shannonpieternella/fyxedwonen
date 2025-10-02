@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../services/api';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -296,10 +297,10 @@ const Conversations: React.FC = () => {
       let endpoint = '';
       if (userType === 'verhuurder') {
         const verhuurderEmail = localStorage.getItem('verhuurderEmail');
-        endpoint = `http://localhost:5001/api/messages/verhuurder/${verhuurderEmail}`;
+        endpoint = `${API_BASE_URL}/messages/verhuurder/${verhuurderEmail}`;
       } else {
         const userEmail = localStorage.getItem('userEmail');
-        endpoint = `http://localhost:5001/api/messages/user/${userEmail}`;
+        endpoint = `${API_BASE_URL}/messages/user/${userEmail}`;
       }
 
       const response = await fetch(endpoint);
@@ -316,7 +317,7 @@ const Conversations: React.FC = () => {
 
   const loadMessages = async (conversationId: string) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/conversation/${conversationId}`);
+      const response = await fetch(`${API_BASE_URL}/messages/conversation/${conversationId}`);
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
@@ -331,7 +332,7 @@ const Conversations: React.FC = () => {
 
   const markAsRead = async (conversationId: string) => {
     try {
-      await fetch(`http://localhost:5001/api/messages/conversation/${conversationId}/read`, {
+      await fetch(`${API_BASE_URL}/messages/conversation/${conversationId}/read`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -370,7 +371,7 @@ const Conversations: React.FC = () => {
       const activeConv = conversations.find(c => c._id === activeConversation);
       if (!activeConv) return;
 
-      const response = await fetch('http://localhost:5001/api/messages/reply', {
+      const response = await fetch(`${API_BASE_URL}/messages/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

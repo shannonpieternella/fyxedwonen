@@ -8,6 +8,7 @@ import {
   useStripe,
   useElements
 } from '@stripe/react-stripe-js';
+import { API_BASE_URL } from '../services/api';
 
 // Type for Stripe global
 declare const Stripe: any;
@@ -210,7 +211,7 @@ const PaymentForm: React.FC<{ selectedPlan: any }> = ({ selectedPlan }) => {
       const userEmail = localStorage.getItem('tempUserEmail') || localStorage.getItem('userEmail') || 'demo@fyxedwonen.nl';
 
       // Call backend to create Stripe checkout session
-      const response = await fetch('http://localhost:5001/api/stripe/create-checkout-session', {
+      const response = await fetch(`${API_BASE_URL}/stripe/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

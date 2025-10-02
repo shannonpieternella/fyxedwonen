@@ -5,11 +5,18 @@ import { Property, SearchFilters, User } from '../types';
 // - Use REACT_APP_API_URL if provided
 // - Use local server during development
 // - Use same-origin '/api' in production (works on mobile and desktop)
-const API_BASE_URL =
+export const API_BASE_URL =
   process.env.REACT_APP_API_URL ||
   (typeof window !== 'undefined' && window.location.hostname === 'localhost'
     ? 'http://localhost:5001/api'
     : '/api');
+
+// Origin (without /api) for static resources like images
+export const API_ORIGIN =
+  (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_URL.replace(/\/api$/, '')) ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:5001'
+    : '');
 
 const api = axios.create({
   baseURL: API_BASE_URL,

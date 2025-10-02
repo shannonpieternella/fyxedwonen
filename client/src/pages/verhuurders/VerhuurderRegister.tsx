@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -282,7 +283,7 @@ const VerhuurderRegister: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5001/api/verhuurders/register', {
+      const response = await fetch(`${API_BASE_URL}/verhuurders/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

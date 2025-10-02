@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -293,7 +294,7 @@ const Dashboard: React.FC = () => {
     // Fetch total properties available from real database
     const fetchTotalProperties = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/properties?limit=1');
+        const response = await fetch(`${API_BASE_URL}/properties?limit=1`);
         const data = await response.json();
 
         if (response.ok) {
@@ -319,7 +320,7 @@ const Dashboard: React.FC = () => {
           const updatedSearches = await Promise.all(
             userSearches.map(async (search: any) => {
               try {
-                const response = await fetch(`http://localhost:5001/api/properties/city/${search.query}`);
+                const response = await fetch(`${API_BASE_URL}/properties/city/${search.query}`);
                 if (response.ok) {
                   const data = await response.json();
                   return { ...search, count: data.count };

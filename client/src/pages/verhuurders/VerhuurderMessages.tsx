@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { API_BASE_URL } from '../../services/api';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -313,7 +314,7 @@ const VerhuurderMessages: React.FC = () => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/verhuurder/${verhuurderEmail}`);
+      const response = await fetch(`${API_BASE_URL}/messages/verhuurder/${verhuurderEmail}`);
       if (response.ok) {
         const data = await response.json();
         setConversations(data.conversations || []);
@@ -327,13 +328,13 @@ const VerhuurderMessages: React.FC = () => {
 
   const fetchMessages = async (conversationId: string) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/messages/conversation/${conversationId}`);
+      const response = await fetch(`${API_BASE_URL}/messages/conversation/${conversationId}`);
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
 
         // Mark messages as read
-        await fetch(`http://localhost:5001/api/messages/conversation/${conversationId}/read`, {
+        await fetch(`${API_BASE_URL}/messages/conversation/${conversationId}/read`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -364,7 +365,7 @@ const VerhuurderMessages: React.FC = () => {
     setSending(true);
 
     try {
-      const response = await fetch('http://localhost:5001/api/messages/reply', {
+      const response = await fetch(`${API_BASE_URL}/messages/reply`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
