@@ -3,17 +3,18 @@ const crypto = require('crypto');
 
 // Create transporter using Zoho Mail credentials from .env
 const createTransporter = () => {
+  const isSecure = process.env.EMAIL_SECURE === 'true';
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: parseInt(process.env.EMAIL_PORT),
-    secure: process.env.EMAIL_SECURE === 'true',
-    requireTLS: process.env.EMAIL_SECURE !== 'true',
+    secure: isSecure, // true for 465, false for other ports
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
     },
     tls: {
-      minVersion: 'TLSv1.2'
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: true
     }
   });
 };
