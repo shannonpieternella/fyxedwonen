@@ -21,6 +21,7 @@ const HeaderContent = styled.div`
   justify-content: space-between;
   height: 70px;
   width: 100%;
+  position: relative; /* anchor absolute hamburger */
 
   @media (max-width: 768px) {
     padding: 0 15px;
@@ -156,26 +157,26 @@ const LogoutButton = styled.button`
 `;
 
 const MobileMenuButton = styled.button`
-  display: none;
+  display: flex; /* always visible */
   flex-direction: column;
   gap: 5px;
   padding: 10px;
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
   z-index: 1100;
-  position: relative;
   background: #ffffff;
   border: 2px solid #e5e7eb;
   border-radius: 10px;
-
-  /* Show hamburger on broader range of devices */
-  @media (max-width: 1024px) {
-    display: flex;
-  }
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  touch-action: manipulation;
 
   span {
     display: block;
     width: 24px;
     height: 3px;
-    background-color: #111827; /* darker for contrast */
+    background-color: #111827;
     transition: all 0.3s ease;
   }
 `;
