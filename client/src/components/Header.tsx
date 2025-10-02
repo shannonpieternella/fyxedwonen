@@ -64,7 +64,9 @@ const Nav = styled.nav<{ isOpen?: boolean }>`
     flex-direction: column;
     padding: 20px;
     border-bottom: 1px solid #e5e7eb;
-    gap: 20px;
+    gap: 12px;
+    align-items: stretch;
+    text-align: left;
   }
 `;
 
@@ -79,6 +81,14 @@ const NavLink = styled(Link)`
     color: #38b6ff;
     border-bottom-color: #38b6ff;
   }
+
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+    padding: 12px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+  }
 `;
 
 const AuthButtons = styled.div`
@@ -88,7 +98,10 @@ const AuthButtons = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
   }
 `;
 
@@ -104,6 +117,14 @@ const LoginButton = styled(Link)`
   &:hover {
     background-color: #f3f4f6;
     color: #38b6ff;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
   }
 `;
 
@@ -121,12 +142,24 @@ const RegisterButton = styled(Link)`
     background-color: #2196f3;
     transform: translateY(-1px);
   }
+
+  @media (max-width: 768px) {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const UserMenu = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
 `;
 
 const UserInfo = styled.span`
@@ -153,6 +186,10 @@ const LogoutButton = styled.button`
 
   &:hover {
     background-color: #fef2f2;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
   }
 `;
 
