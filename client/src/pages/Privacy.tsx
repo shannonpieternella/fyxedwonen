@@ -123,7 +123,7 @@ const Privacy: React.FC = () => {
         <SectionText>
           Fyxed Wonen B.V. (KvK: 97975354) is de verantwoordelijke voor de verwerking van uw
           persoonlijke gegevens. Wij zijn gevestigd aan de Nieuwe Koelenstraat 15, 6821 AB Arnhem
-          en zijn bereikbaar via info@fyxedwonen.nl.
+          en zijn bereikbaar via wonen@fyxedbv.nl.
         </SectionText>
 
         <SectionTitle>2. Welke gegevens verzamelen wij</SectionTitle>
@@ -257,7 +257,7 @@ const Privacy: React.FC = () => {
 
         <SubsectionTitle>9.1 Hoe uw rechten uitoefenen</SubsectionTitle>
         <SectionText>
-          Stuur een e-mail naar privacy@fyxedwonen.nl met uw verzoek. Wij reageren binnen 30 dagen.
+          Stuur een e-mail naar wonen@fyxedbv.nl met uw verzoek. Wij reageren binnen 30 dagen.
           Voor uw beveiliging vragen wij om identificatie voordat wij uw verzoek behandelen.
         </SectionText>
 
@@ -278,7 +278,7 @@ const Privacy: React.FC = () => {
 
         <SubsectionTitle>12.1 Vragen over privacy</SubsectionTitle>
         <List>
-          <ListItem>E-mail: privacy@fyxedwonen.nl</ListItem>
+          <ListItem>E-mail: wonen@fyxedbv.nl</ListItem>
           <ListItem>Telefoon: +31 26 123 4567</ListItem>
           <ListItem>Post: Fyxed Wonen B.V., t.a.v. Privacy Officer, Nieuwe Koelenstraat 15, 6821 AB Arnhem</ListItem>
         </List>
@@ -291,7 +291,7 @@ const Privacy: React.FC = () => {
 
         <HighlightBox>
           <SectionText style={{ marginBottom: 0, color: '#1f2937' }}>
-            <strong>Heeft u vragen?</strong> Neem gerust contact op via privacy@fyxedwonen.nl.
+            <strong>Heeft u vragen?</strong> Neem gerust contact op via wonen@fyxedbv.nl.
             Wij helpen u graag met vragen over uw privacy en gegevensbescherming.
           </SectionText>
         </HighlightBox>

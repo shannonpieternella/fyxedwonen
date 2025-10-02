@@ -226,7 +226,7 @@ const Terms: React.FC = () => {
           Voor vragen over deze voorwaarden kunt u contact opnemen via:
         </SectionText>
         <List>
-          <ListItem>E-mail: info@fyxedwonen.nl</ListItem>
+          <ListItem>E-mail: wonen@fyxedbv.nl</ListItem>
           <ListItem>Telefoon: +31 26 123 4567</ListItem>
           <ListItem>Adres: Nieuwe Koelenstraat 15, 6821 AB Arnhem</ListItem>
         </List>

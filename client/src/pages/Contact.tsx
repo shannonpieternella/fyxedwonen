@@ -341,7 +341,7 @@ const Contact: React.FC = () => {
                 </ContactIcon>
                 <ContactInfoText>
                   <ContactLabel>E-mail</ContactLabel>
-                  <ContactValue>info@fyxedwonen.nl</ContactValue>
+                  <ContactValue>wonen@fyxedbv.nl</ContactValue>
                 </ContactInfoText>
               </ContactItem>
 
