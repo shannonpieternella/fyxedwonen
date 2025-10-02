@@ -438,16 +438,7 @@ const CityStats = styled.div`
   gap: 2px;
 `;
 
-const CityCount = styled.p`
-  color: #4b5563;
-  font-size: 14px;
-  font-weight: 500;
-`;
-
-const CityPrice = styled.p`
-  color: #6b7280;
-  font-size: 14px;
-`;
+// Removed city count/average price display on homepage
 
 const Homepage: React.FC = () => {
   const navigate = useNavigate();
@@ -569,10 +560,6 @@ const Homepage: React.FC = () => {
               </CityImage>
               <CityInfo>
                 <CityName>Amsterdam</CityName>
-                <CityStats>
-                  <CityCount>652 woningen</CityCount>
-                  <CityPrice>Gem. € 2.490</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
 
@@ -580,10 +567,6 @@ const Homepage: React.FC = () => {
               <CityImage className="rotterdam" />
               <CityInfo>
                 <CityName>Rotterdam</CityName>
-                <CityStats>
-                  <CityCount>274 woningen</CityCount>
-                  <CityPrice>Gem. € 2.088</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
 
@@ -591,10 +574,6 @@ const Homepage: React.FC = () => {
               <CityImage className="den-haag" />
               <CityInfo>
                 <CityName>Den Haag</CityName>
-                <CityStats>
-                  <CityCount>337 woningen</CityCount>
-                  <CityPrice>Gem. € 2.312</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
 
@@ -602,10 +581,6 @@ const Homepage: React.FC = () => {
               <CityImage className="utrecht" />
               <CityInfo>
                 <CityName>Utrecht</CityName>
-                <CityStats>
-                  <CityCount>129 woningen</CityCount>
-                  <CityPrice>Gem. € 2.207</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
 
@@ -613,10 +588,6 @@ const Homepage: React.FC = () => {
               <CityImage className="eindhoven" />
               <CityInfo>
                 <CityName>Eindhoven</CityName>
-                <CityStats>
-                  <CityCount>118 woningen</CityCount>
-                  <CityPrice>Gem. € 1.774</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
 
@@ -624,10 +595,6 @@ const Homepage: React.FC = () => {
               <CityImage className="maastricht" />
               <CityInfo>
                 <CityName>Maastricht</CityName>
-                <CityStats>
-                  <CityCount>74 woningen</CityCount>
-                  <CityPrice>Gem. € 1.437</CityPrice>
-                </CityStats>
               </CityInfo>
             </CityCard>
           </CitiesGrid>
