@@ -160,6 +160,14 @@ const FeatureBadges = styled.div`
   flex-wrap: wrap;
   margin-top: 8px;
   animation: fadeInUp 0.8s ease-out 0.6s both;
+  justify-content: center;
+  max-width: 600px;
+
+  @media (max-width: 968px) {
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 8px;
+  }
 `;
 
 const Badge = styled.span`
@@ -167,17 +175,31 @@ const Badge = styled.span`
   align-items: center;
   gap: 8px;
   background: white;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 10px 18px;
+  border-radius: 24px;
   font-size: 14px;
+  font-weight: 500;
   color: #4b5563;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
 
   &::before {
     content: '✓';
     color: #38b6ff;
     font-weight: bold;
+    font-size: 16px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    border-color: #38b6ff;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 13px;
+    padding: 8px 14px;
   }
 `;
 
@@ -727,6 +749,8 @@ const Homepage: React.FC = () => {
               <Badge>Gratis zoeken</Badge>
               <Badge>1000+ woningen</Badge>
               <Badge>Direct contact</Badge>
+              <Badge>Geverifieerd</Badge>
+              <Badge>24/7 beschikbaar</Badge>
             </FeatureBadges>
           </LeftContent>
 
