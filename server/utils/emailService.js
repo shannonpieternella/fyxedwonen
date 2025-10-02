@@ -24,10 +24,12 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
   try {
     const transporter = createTransporter();
 
+    // Determine frontend base URL
+    const appBaseUrl = process.env.APP_BASE_URL || 'https://fyxedwonen.nl';
     // Create reset URL based on user type
     const resetUrl = userType === 'verhuurder'
-      ? `http://localhost:3000/verhuurders/reset-password?token=${resetToken}`
-      : `http://localhost:3000/reset-password?token=${resetToken}`;
+      ? `${appBaseUrl}/verhuurders/reset-password?token=${resetToken}`
+      : `${appBaseUrl}/reset-password?token=${resetToken}`;
 
     const mailOptions = {
       from: `"${process.env.EMAIL_FROM_NAME}" <${process.env.EMAIL_FROM}>`,
