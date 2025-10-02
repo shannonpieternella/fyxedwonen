@@ -22,27 +22,66 @@ fi
 
 echo "✅ Build successful!"
 
-# Upload build files to server (to Nginx docroot)
+## Upload build files to server (to Nginx docroot)
 echo "📤 Uploading build files to Hetzner server (docroot)..."
 cd ..
 
 # Nginx serves from this docroot per config
-SERVER_DOCROOT="/var/www/fyxedwonen/"
+SERVER_ROOT="/var/www/fyxedwonen"
 
-# Prefer rsync for atomic, deleted-file sync; fallback to scp
+# Prefer rsync for accurate sync; exclude backend and dotfiles
 if command -v rsync >/dev/null 2>&1; then
-    rsync -avz --delete -e "ssh -i $SSH_KEY" client/build/ "$SERVER_USER@$SERVER_IP:$SERVER_DOCROOT"
+    rsync -avz --delete \
+      --exclude 'server/' \
+      --exclude '.git/' \
+      --exclude '.git*' \
+      -e "ssh -i $SSH_KEY" \
+      client/build/ "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/"
 else
     echo "⚠️ rsync not found locally; falling back to scp (no delete)." >&2
-    scp -i "$SSH_KEY" -r client/build/* "$SERVER_USER@$SERVER_IP:$SERVER_DOCROOT"
+    scp -i "$SSH_KEY" -r client/build/* "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/"
 fi
 
-if [ $? -ne 0 ]; then
-    echo "❌ Upload failed!"
-    exit 1
+## Deploy backend server code (if .env exists)
+echo "🛠️ Updating backend server code..."
+if ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" "test -f $SERVER_ROOT/server/.env"; then
+  echo "✅ .env found on server; proceeding with backend deploy"
+  if command -v rsync >/dev/null 2>&1; then
+      rsync -avz --delete \
+        --exclude 'node_modules/' \
+        -e "ssh -i $SSH_KEY" \
+        server/ "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/server/"
+  else
+      echo "⚠️ rsync not found; uploading server via scp (no delete)." >&2
+      scp -i "$SSH_KEY" -r server/* "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/server/"
+  fi
+
+  # Install dependencies and restart Node server
+  echo "🔁 Installing server deps and restarting API..."
+  ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" bash -lc "\
+    set -e; \
+    cd $SERVER_ROOT/server && \
+    if command -v npm >/dev/null 2>&1; then \
+      npm install --production; \
+    fi; \
+    # Restart running node on port 5001 if present
+    if ss -ltnp | grep -q ':5001'; then \
+      pkill -f '$SERVER_ROOT/server/index.js' || true; \
+    fi; \
+    nohup node index.js > /var/log/fyxedwonen-server.log 2>&1 & disown; \
+    sleep 1; \
+    ss -ltnp | awk '/:5001/ {print \$0}' || true \
+  "
+  if [ $? -ne 0 ]; then
+      echo "❌ Backend restart failed!"
+      exit 1
+  fi
+  echo "✅ Backend updated"
+else
+  echo "⚠️ No .env on server; skipping backend deploy and restart to avoid downtime."
 fi
 
-echo "✅ Upload successful!"
+echo "✅ Frontend upload successful!"
 
 # Reload nginx
 echo "🔄 Reloading nginx..."

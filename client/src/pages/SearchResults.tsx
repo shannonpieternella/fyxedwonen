@@ -648,10 +648,13 @@ const SearchResults: React.FC = () => {
   };
 
   const applyFilters = (e?: React.FormEvent | React.MouseEvent) => {
-    if (e) e.preventDefault();
+    if (e && typeof (e as React.FormEvent).preventDefault === 'function') {
+      (e as React.FormEvent).preventDefault();
+    }
     const params = new URLSearchParams();
 
-    if (filters.city) params.append('woningplaats', filters.city.toLowerCase());
+    const city = (filters.city || '').trim().replace(/\s+/g, ' ');
+    if (city) params.append('woningplaats', city.toLowerCase());
     if (filters.min_prijs) params.append('min_prijs', filters.min_prijs.toString());
     if (filters.max_prijs) params.append('max_prijs', filters.max_prijs.toString());
     if (filters.bedrooms) params.append('bedrooms', filters.bedrooms.toString());
@@ -681,7 +684,7 @@ const SearchResults: React.FC = () => {
     return (
       <PageContainer>
         <HeroSection>
-          <SearchFormOverlay>
+          <SearchFormOverlay onSubmit={applyFilters}>
             <FilterGroup>
               <FilterLabel>Locatie</FilterLabel>
               <FilterInput
@@ -744,9 +747,7 @@ const SearchResults: React.FC = () => {
               </FilterSelect>
             </FilterGroup>
 
-            <SearchButton onClick={applyFilters}>
-              🔍
-            </SearchButton>
+            <SearchButton type="submit">🔍</SearchButton>
           </SearchFormOverlay>
         </HeroSection>
         <ContentSection>
