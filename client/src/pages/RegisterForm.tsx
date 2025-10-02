@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { userApi } from '../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -254,44 +255,33 @@ const RegisterForm: React.FC = () => {
     }
 
     try {
-      // Real registration with backend API
-      const response = await fetch('http://localhost:5001/api/users/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone,
-        }),
+      const data = await userApi.register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setSuccess('Account succesvol aangemaakt! Je wordt doorgestuurd naar de betaalpagina...');
+      setSuccess('Account succesvol aangemaakt! Je wordt doorgestuurd naar de betaalpagina...');
 
-        // Store user data temporarily for payment
-        localStorage.setItem('tempUserData', JSON.stringify({
-          ...formData,
-          selectedPlan
-        }));
+      // Store user data temporarily for payment
+      localStorage.setItem('tempUserData', JSON.stringify({
+        ...formData,
+        selectedPlan
+      }));
 
-        // Store auth token
-        localStorage.setItem('authToken', data.token);
+      // Store auth token
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('token', data.token); // ensure axios interceptor picks it up
 
-        // Redirect to payment page after 2 seconds
-        setTimeout(() => {
-          navigate('/payment');
-        }, 2000);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Er is een fout opgetreden bij het registreren');
-      }
-    } catch (err) {
-      setError('Kan geen verbinding maken met de server. Probeer het later opnieuw.');
+      // Redirect to payment page after 2 seconds
+      setTimeout(() => {
+        navigate('/payment');
+      }, 2000);
+    } catch (err: any) {
+      const message = err?.response?.data?.message || 'Er is een fout opgetreden bij het registreren';
+      setError(message);
     } finally {
       setLoading(false);
     }

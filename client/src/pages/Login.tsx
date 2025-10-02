@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { userApi } from '../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -186,39 +187,22 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      // Only allow real backend login
-      const response = await fetch('http://localhost:5001/api/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
+      const data = await userApi.login({ email, password });
 
-      if (response.ok) {
-        const data = await response.json();
+      // Successful backend login
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('paymentCompleted', 'true');
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('token', data.token); // ensure axios interceptor picks it up
 
-        // Successful backend login
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userEmail', data.user.email);
-        localStorage.setItem('paymentCompleted', 'true');
-        localStorage.setItem('authToken', data.token);
+      // Trigger custom event for real-time updates
+      window.dispatchEvent(new Event('authStatusChanged'));
 
-        // Trigger custom event for real-time updates
-        window.dispatchEvent(new Event('authStatusChanged'));
-
-        navigate('/dashboard');
-      } else {
-        // Show proper error message for failed login
-        const errorData = await response.json();
-        setError(errorData.message || 'Ongeldige inloggegevens');
-      }
-    } catch (err) {
-      // Show network error
-      setError('Kan geen verbinding maken met de server. Probeer het later opnieuw.');
+      navigate('/dashboard');
+    } catch (err: any) {
+      const message = err?.response?.data?.message || 'Ongeldige inloggegevens of server niet bereikbaar';
+      setError(message);
     } finally {
       setLoading(false);
     }
