@@ -15,7 +15,10 @@ const createTransporter = () => {
     tls: {
       minVersion: 'TLSv1.2',
       rejectUnauthorized: true
-    }
+    },
+    connectionTimeout: 10000, // 10 seconds
+    greetingTimeout: 10000,   // 10 seconds
+    socketTimeout: 15000      // 15 seconds
   });
 };
 
@@ -39,14 +42,9 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
 
     const transporter = createTransporter();
 
-    // Verify SMTP connection
-    try {
-      await transporter.verify();
-      console.log('[EmailService] SMTP connection verified successfully');
-    } catch (verifyError) {
-      console.error('[EmailService] SMTP verification failed:', verifyError.message);
-      throw new Error(`SMTP verification failed: ${verifyError.message}`);
-    }
+    // Skip SMTP verification (it hangs on Hetzner due to blocked SMTP ports)
+    // We'll rely on the actual send to catch errors
+    console.log('[EmailService] Skipping SMTP verification (blocked on cloud hosts)');
 
     // Determine frontend base URL
     const appBaseUrl = process.env.APP_BASE_URL || 'https://fyxedwonen.nl';
