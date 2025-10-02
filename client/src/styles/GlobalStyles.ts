@@ -1,6 +1,17 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
+  html, body, #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Prevent accidental horizontal scroll on mobile */
+  body {
+    overscroll-behavior-x: none;
+  }
+
   * {
     margin: 0;
     padding: 0;

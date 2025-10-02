@@ -7,7 +7,8 @@ const HeaderContainer = styled.header`
   border-bottom: 1px solid #e5e7eb;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  width: 100%;
 `;
 
 const HeaderContent = styled.div`
@@ -18,6 +19,7 @@ const HeaderContent = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 70px;
+  width: 100%;
 
   @media (max-width: 768px) {
     padding: 0 15px;
@@ -157,6 +159,8 @@ const MobileMenuButton = styled.button`
   flex-direction: column;
   gap: 4px;
   padding: 8px;
+  z-index: 1100;
+  position: relative;
 
   @media (max-width: 768px) {
     display: flex;
