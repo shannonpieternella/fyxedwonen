@@ -4,17 +4,21 @@ const crypto = require('crypto');
 // Create transporter using Zoho Mail credentials from .env
 const createTransporter = () => {
   const isSecure = process.env.EMAIL_SECURE === 'true';
+  const port = parseInt(process.env.EMAIL_PORT);
+
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
-    port: parseInt(process.env.EMAIL_PORT),
-    secure: isSecure, // true for 465, false for other ports
+    port: port,
+    secure: isSecure, // true for 465 (SSL), false for 587 (STARTTLS)
+    requireTLS: !isSecure, // Use STARTTLS for port 587
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS
     },
     tls: {
       minVersion: 'TLSv1.2',
-      rejectUnauthorized: true
+      rejectUnauthorized: true,
+      ciphers: 'HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4'
     },
     connectionTimeout: 10000, // 10 seconds
     greetingTimeout: 10000,   // 10 seconds
@@ -42,9 +46,14 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
 
     const transporter = createTransporter();
 
-    // Skip SMTP verification (it hangs on Hetzner due to blocked SMTP ports)
-    // We'll rely on the actual send to catch errors
-    console.log('[EmailService] Skipping SMTP verification (blocked on cloud hosts)');
+    // Verify SMTP connection (using port 587 which works on Hetzner)
+    try {
+      await transporter.verify();
+      console.log('[EmailService] SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('[EmailService] SMTP verification failed:', verifyError.message);
+      // Continue anyway - we'll catch errors during send
+    }
 
     // Determine frontend base URL
     const appBaseUrl = process.env.APP_BASE_URL || 'https://fyxedwonen.nl';
