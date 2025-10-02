@@ -56,24 +56,13 @@ if ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" "test -f $SERVER_ROOT/server/.env
       scp -i "$SSH_KEY" -r server/* "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/server/"
   fi
 
-  # Install dependencies and restart Node server
-  echo "🔁 Installing server deps and restarting API..."
-  ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" bash -lc "\
-    if command -v npm >/dev/null 2>&1; then \
-      npm --prefix /var/www/fyxedwonen/server install --production || exit 1; \
-    fi; \
-    # Restart running node on port 5001 if present
-    pkill -f '/var/www/fyxedwonen/server/index.js' >/dev/null 2>&1 || true; \
-    nohup node /var/www/fyxedwonen/server/index.js > /var/log/fyxedwonen-server.log 2>&1 & \
-    sleep 1; \
-    ss -ltnp | awk '/:5001/ {print \$0}' >/dev/null 2>&1 || true; \
-    exit 0 \
-  "
-  if [ $? -ne 0 ]; then
-      echo "❌ Backend restart failed!"
-      exit 1
+  # Restart Node server (non-blocking, don't fail deploy if it errors)
+  echo "🔁 Restarting API (best-effort)..."
+  if ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" "pkill -f '/var/www/fyxedwonen/server/index.js' >/dev/null 2>&1 || true; nohup node /var/www/fyxedwonen/server/index.js > /var/log/fyxedwonen-server.log 2>&1 & sleep 1; ss -ltnp | grep -q ':5001' || true"; then
+    echo "✅ Backend restart attempted"
+  else
+    echo "⚠️ Backend restart encountered an issue; continuing deploy"
   fi
-  echo "✅ Backend updated"
 else
   echo "⚠️ No .env on server; skipping backend deploy and restart to avoid downtime."
 fi

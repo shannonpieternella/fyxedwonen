@@ -1,7 +1,15 @@
 import axios from 'axios';
 import { Property, SearchFilters, User } from '../types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Determine API base URL:
+// - Use REACT_APP_API_URL if provided
+// - Use local server during development
+// - Use same-origin '/api' in production (works on mobile and desktop)
+const API_BASE_URL =
+  process.env.REACT_APP_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    ? 'http://localhost:5001/api'
+    : '/api');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
