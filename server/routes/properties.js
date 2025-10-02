@@ -52,7 +52,9 @@ router.get('/', async (req, res) => {
     const filter = { isActive: true, approvalStatus: 'approved' };
 
     if (city) {
-      filter['address.city'] = new RegExp(city, 'i');
+      // Normalize city: allow slugs like "den-haag" by converting hyphens to spaces
+      const normalizedCity = String(city).replace(/-/g, ' ');
+      filter['address.city'] = new RegExp(normalizedCity, 'i');
     }
 
     if (min_prijs || max_prijs) {
@@ -139,8 +141,9 @@ router.post('/', upload.array('images', 10), async (req, res) => {
 router.get('/city/:city', async (req, res) => {
   try {
     const { city } = req.params;
+    const normalizedCity = String(city).replace(/-/g, ' ');
     const count = await Property.countDocuments({
-      'address.city': new RegExp(city, 'i'),
+      'address.city': new RegExp(normalizedCity, 'i'),
       isActive: true,
       approvalStatus: 'approved'
     });

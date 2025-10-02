@@ -587,7 +587,7 @@ const Homepage: React.FC = () => {
               </CityInfo>
             </CityCard>
 
-            <CityCard onClick={() => handleCityClick('den-haag')}>
+            <CityCard onClick={() => handleCityClick('den haag')}>
               <CityImage className="den-haag" />
               <CityInfo>
                 <CityName>Den Haag</CityName>
