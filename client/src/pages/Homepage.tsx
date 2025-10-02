@@ -740,18 +740,15 @@ const Homepage: React.FC = () => {
               <PrimaryButton onClick={() => navigate('/woning')}>
                 Bekijk woningen
               </PrimaryButton>
-              <SecondaryButton onClick={() => window.scrollTo({ top: 300, behavior: 'smooth' })}>
+              <SecondaryButton onClick={() => {
+                const searchSection = document.querySelector('[data-search-section]');
+                if (searchSection) {
+                  searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+              }}>
                 Begin zoeken
               </SecondaryButton>
             </CTAButtonGroup>
-
-            <FeatureBadges>
-              <Badge>Gratis zoeken</Badge>
-              <Badge>1000+ woningen</Badge>
-              <Badge>Direct contact</Badge>
-              <Badge>Geverifieerd</Badge>
-              <Badge>24/7 beschikbaar</Badge>
-            </FeatureBadges>
           </LeftContent>
 
           <TruckContainer>
@@ -774,7 +771,7 @@ const Homepage: React.FC = () => {
         </HeroContent>
       </HeroSection>
 
-      <SearchSection>
+      <SearchSection data-search-section>
         <SearchContainer>
           <SearchForm onSubmit={handleSearch}>
             <FormGroup>
