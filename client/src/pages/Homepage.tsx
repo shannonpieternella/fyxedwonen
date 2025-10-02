@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -63,12 +63,12 @@ const TruckContainer = styled.div`
   }
 `;
 
-const TruckIllustration = styled.div`
+const TruckIllustration = styled.div<{ $currentImage: string }>`
   position: relative;
   width: 100%;
   max-width: 500px;
   height: 300px;
-  background-image: url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80');
+  background-image: url(${props => props.$currentImage});
   background-size: cover;
   background-position: center;
   border-radius: 20px;
@@ -77,6 +77,7 @@ const TruckIllustration = styled.div`
   justify-content: center;
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: background-image 0.8s ease-in-out;
 
   &::before {
     content: '';
@@ -105,6 +106,31 @@ const TruckIllustration = styled.div`
     z-index: 2;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
+  }
+`;
+
+const SlideshowDots = styled.div`
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+`;
+
+const Dot = styled.div<{ $active: boolean }>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${props => props.$active ? '#38b6ff' : 'rgba(255, 255, 255, 0.5)'};
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: ${props => props.$active ? '#38b6ff' : 'rgba(255, 255, 255, 0.8)'};
+    transform: scale(1.2);
   }
 `;
 
@@ -449,6 +475,48 @@ const Homepage: React.FC = () => {
     bedrooms: ''
   });
 
+  // Slideshow state
+  const slideshowImages = [
+    '/images/slideshow/start.jpg',
+    '/images/slideshow/slide2.jpg',
+    '/images/slideshow/slide3.jpg',
+    '/images/slideshow/slide4.jpg',
+    '/images/slideshow/slide5.jpg'
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [availableImages, setAvailableImages] = useState<string[]>([]);
+
+  // Check which images are available
+  useEffect(() => {
+    const checkImages = async () => {
+      const available: string[] = [];
+      for (const img of slideshowImages) {
+        try {
+          const response = await fetch(img, { method: 'HEAD' });
+          if (response.ok) {
+            available.push(img);
+          }
+        } catch (e) {
+          // Image doesn't exist, skip it
+        }
+      }
+      setAvailableImages(available.length > 0 ? available : [slideshowImages[0]]);
+    };
+    checkImages();
+  }, []);
+
+  // Auto-advance slideshow every 3 seconds
+  useEffect(() => {
+    if (availableImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % availableImages.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [availableImages.length]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setSearchData({
       ...searchData,
@@ -486,7 +554,21 @@ const Homepage: React.FC = () => {
           </LeftContent>
 
           <TruckContainer>
-            <TruckIllustration />
+            <TruckIllustration
+              $currentImage={availableImages[currentSlide] || slideshowImages[0]}
+            >
+              {availableImages.length > 1 && (
+                <SlideshowDots>
+                  {availableImages.map((_, index) => (
+                    <Dot
+                      key={index}
+                      $active={currentSlide === index}
+                      onClick={() => setCurrentSlide(index)}
+                    />
+                  ))}
+                </SlideshowDots>
+              )}
+            </TruckIllustration>
           </TruckContainer>
         </HeroContent>
       </HeroSection>
