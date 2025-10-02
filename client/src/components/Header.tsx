@@ -157,20 +157,24 @@ const LogoutButton = styled.button`
 const MobileMenuButton = styled.button`
   display: none;
   flex-direction: column;
-  gap: 4px;
-  padding: 8px;
+  gap: 5px;
+  padding: 10px;
   z-index: 1100;
   position: relative;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
 
-  @media (max-width: 768px) {
+  /* Show hamburger on broader range of devices */
+  @media (max-width: 1024px) {
     display: flex;
   }
 
   span {
     display: block;
     width: 24px;
-    height: 2px;
-    background-color: #4b5563;
+    height: 3px;
+    background-color: #111827; /* darker for contrast */
     transition: all 0.3s ease;
   }
 `;
@@ -272,7 +276,7 @@ const Header: React.FC = () => {
           </AuthButtons>
         </Nav>
 
-        <MobileMenuButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <MobileMenuButton aria-label="Menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <span />
           <span />
           <span />
