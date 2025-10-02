@@ -511,8 +511,13 @@ router.post('/forgot-password', async (req, res) => {
     verhuurder.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await verhuurder.save();
 
-    // Send email
-    await sendPasswordResetEmail(email, resetToken, 'verhuurder');
+    // Send email (do not reveal failures to client)
+    try {
+      await sendPasswordResetEmail(email, resetToken, 'verhuurder');
+    } catch (mailErr) {
+      console.error('sendPasswordResetEmail failed:', mailErr?.message || mailErr);
+      // Continue with generic success response to avoid user enumeration/leakage
+    }
 
     res.json({
       message: 'Als dit e-mailadres bestaat, ontvang je een reset link.'

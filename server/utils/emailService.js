@@ -26,7 +26,26 @@ const generateResetToken = () => {
 // Send password reset email
 const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
   try {
+    console.log('[EmailService] Starting password reset email send...');
+    console.log('[EmailService] Target email:', email);
+    console.log('[EmailService] User type:', userType);
+    console.log('[EmailService] Email config:', {
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      user: process.env.EMAIL_USER,
+      from: process.env.EMAIL_FROM
+    });
+
     const transporter = createTransporter();
+
+    // Verify SMTP connection
+    try {
+      await transporter.verify();
+      console.log('[EmailService] SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('[EmailService] SMTP verification failed:', verifyError.message);
+      throw new Error(`SMTP verification failed: ${verifyError.message}`);
+    }
 
     // Determine frontend base URL
     const appBaseUrl = process.env.APP_BASE_URL || 'https://fyxedwonen.nl';
@@ -34,6 +53,8 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
     const resetUrl = userType === 'verhuurder'
       ? `${appBaseUrl}/verhuurders/reset-password?token=${resetToken}`
       : `${appBaseUrl}/reset-password?token=${resetToken}`;
+
+    console.log('[EmailService] Reset URL:', resetUrl);
 
     const mailOptions = {
       from: `"${process.env.EMAIL_FROM_NAME}" <${process.env.EMAIL_FROM}>`,
@@ -126,11 +147,23 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
       `
     };
 
+    console.log('[EmailService] Sending email...');
     const info = await transporter.sendMail(mailOptions);
-    console.log('Password reset email sent:', info.messageId);
+    console.log('[EmailService] ✓ Password reset email sent successfully!');
+    console.log('[EmailService] Message ID:', info.messageId);
+    console.log('[EmailService] Response:', info.response);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Error sending password reset email:', error);
+    console.error('[EmailService] ✗ Error sending password reset email:');
+    console.error('[EmailService] Error type:', error.name);
+    console.error('[EmailService] Error message:', error.message);
+    console.error('[EmailService] Error code:', error.code);
+    if (error.response) {
+      console.error('[EmailService] Server response:', error.response);
+    }
+    if (error.command) {
+      console.error('[EmailService] Failed command:', error.command);
+    }
     throw error;
   }
 };

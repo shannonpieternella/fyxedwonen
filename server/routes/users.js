@@ -4,6 +4,36 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { generateResetToken, sendPasswordResetEmail } = require('../utils/emailService');
 
+// Test email endpoint (remove in production!)
+router.get('/test-email', async (req, res) => {
+  try {
+    const testEmail = req.query.email || 'test@example.com';
+    const testToken = 'test-token-' + Date.now();
+
+    console.log('\n=== TESTING EMAIL FUNCTIONALITY ===');
+    console.log('Sending test email to:', testEmail);
+
+    await sendPasswordResetEmail(testEmail, testToken, 'user');
+
+    res.json({
+      success: true,
+      message: 'Test email sent! Check server logs for details.',
+      testEmail
+    });
+  } catch (error) {
+    console.error('Test email failed:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      details: {
+        name: error.name,
+        code: error.code,
+        command: error.command
+      }
+    });
+  }
+});
+
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, password, phone } = req.body;
