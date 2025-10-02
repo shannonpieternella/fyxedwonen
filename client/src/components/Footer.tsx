@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -113,6 +113,19 @@ const ContactInfo = styled.div`
 `;
 
 const Footer: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isVerhuurderLoggedIn, setIsVerhuurderLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const update = () => {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+      setIsVerhuurderLoggedIn(localStorage.getItem('verhuurderLoggedIn') === 'true');
+    };
+    update();
+    window.addEventListener('authStatusChanged', update);
+    return () => window.removeEventListener('authStatusChanged', update);
+  }, []);
+
   return (
     <FooterContainer>
       <FooterContent>
@@ -137,9 +150,11 @@ const Footer: React.FC = () => {
               <FooterLinkItem>
                 <FooterLink to="/verhuurders" onClick={handleLinkClick}>Voor Verhuurders</FooterLink>
               </FooterLinkItem>
-              <FooterLinkItem>
-                <FooterLink to="/dashboard" onClick={handleLinkClick}>Mijn Account</FooterLink>
-              </FooterLinkItem>
+              {isLoggedIn && (
+                <FooterLinkItem>
+                  <FooterLink to="/dashboard" onClick={handleLinkClick}>Mijn Account</FooterLink>
+                </FooterLinkItem>
+              )}
             </FooterLinkList>
           </FooterSection>
 
@@ -161,12 +176,16 @@ const Footer: React.FC = () => {
               <FooterLinkItem>
                 <FooterLink to="/verhuurders" onClick={handleLinkClick}>Verhuurder Portal</FooterLink>
               </FooterLinkItem>
-              <FooterLinkItem>
-                <FooterLink to="/verhuurders/login" onClick={handleLinkClick}>Inloggen</FooterLink>
-              </FooterLinkItem>
-              <FooterLinkItem>
-                <FooterLink to="/verhuurders/register" onClick={handleLinkClick}>Registreren</FooterLink>
-              </FooterLinkItem>
+              {!isVerhuurderLoggedIn && (
+                <>
+                  <FooterLinkItem>
+                    <FooterLink to="/verhuurders/login" onClick={handleLinkClick}>Inloggen</FooterLink>
+                  </FooterLinkItem>
+                  <FooterLinkItem>
+                    <FooterLink to="/verhuurders/register" onClick={handleLinkClick}>Registreren</FooterLink>
+                  </FooterLinkItem>
+                </>
+              )}
             </FooterLinkList>
           </FooterSection>
 

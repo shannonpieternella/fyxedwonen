@@ -229,6 +229,16 @@ interface FormData {
 
 const VerhuurderRegister: React.FC = () => {
   const navigate = useNavigate();
+  // Redirect if already logged in (user or verhuurder)
+  React.useEffect(() => {
+    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (verhuurderLoggedIn) {
+      navigate('/verhuurders/dashboard', { replace: true });
+    } else if (loggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',

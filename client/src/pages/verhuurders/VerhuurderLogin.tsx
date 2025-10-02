@@ -192,6 +192,17 @@ const VerhuurderLogin: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Redirect away if already logged in (user or verhuurder)
+  React.useEffect(() => {
+    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (verhuurderLoggedIn) {
+      navigate('/verhuurders/dashboard', { replace: true });
+    } else if (loggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);

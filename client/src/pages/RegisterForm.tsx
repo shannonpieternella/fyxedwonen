@@ -212,6 +212,17 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Redirect if already logged in
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
+    if (verhuurderLoggedIn) {
+      navigate('/verhuurders/dashboard', { replace: true });
+      return;
+    }
+    if (loggedIn) {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
     // Get selected plan from localStorage
     const planData = localStorage.getItem('selectedPlan');
     if (planData) {

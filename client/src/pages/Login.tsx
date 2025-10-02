@@ -181,6 +181,17 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Redirect away if already logged in
+  React.useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
+    if (verhuurderLoggedIn) {
+      navigate('/verhuurders/dashboard', { replace: true });
+    } else if (loggedIn) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
