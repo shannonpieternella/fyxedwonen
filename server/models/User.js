@@ -42,6 +42,14 @@ const UserSchema = new mongoose.Schema({
   },
   resetPasswordExpires: {
     type: Date
+  },
+  welcomeEmailSent: {
+    type: Boolean,
+    default: false
+  },
+  paymentCompleted: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../models/User');
+const { sendWelcomeEmail } = require('../utils/emailService');
 
 // Initialize Stripe with fallback for demo
 let stripe;
@@ -73,6 +75,8 @@ router.get('/verify-payment/:sessionId', async (req, res) => {
 
     // Handle demo sessions
     if (sessionId.startsWith('demo_session_')) {
+      // For demo mode, try to find user from tempUserData or send to demo email
+      // This is a fallback - in production demo would have real user email
       return res.json({
         status: 'paid',
         customer_email: 'demo@fyxedwonen.nl',
@@ -89,6 +93,48 @@ router.get('/verify-payment/:sessionId', async (req, res) => {
     }
 
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+    // If payment is successful, send welcome email
+    if (session.payment_status === 'paid' && session.customer_email) {
+      try {
+        // Find user by email to get first name
+        const user = await User.findOne({ email: session.customer_email.toLowerCase() });
+
+        if (user) {
+          // Only send welcome email if not already sent
+          if (!user.welcomeEmailSent) {
+            // Send welcome email asynchronously (don't wait for it)
+            sendWelcomeEmail(user.email, user.firstName, 'user')
+              .then(async () => {
+                console.log('[Stripe] Welcome email sent to:', user.email);
+                // Mark welcome email as sent
+                try {
+                  await User.updateOne(
+                    { _id: user._id },
+                    { welcomeEmailSent: true, paymentCompleted: true }
+                  );
+                } catch (updateErr) {
+                  console.error('[Stripe] Failed to update welcomeEmailSent flag:', updateErr.message);
+                }
+              })
+              .catch((mailErr) => console.error('[Stripe] Welcome email failed:', mailErr?.message));
+          } else {
+            console.log('[Stripe] Welcome email already sent to:', user.email);
+            // Still mark payment as completed
+            try {
+              await User.updateOne({ _id: user._id }, { paymentCompleted: true });
+            } catch (updateErr) {
+              console.error('[Stripe] Failed to update paymentCompleted flag:', updateErr.message);
+            }
+          }
+        } else {
+          console.log('[Stripe] User not found for email:', session.customer_email);
+        }
+      } catch (error) {
+        console.error('[Stripe] Error looking up user for welcome email:', error.message);
+        // Don't fail the payment verification because of email issues
+      }
+    }
 
     res.json({
       status: session.payment_status,
