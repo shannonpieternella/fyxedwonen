@@ -7,7 +7,7 @@ const HeaderContainer = styled.header`
   border-bottom: 1px solid #e5e7eb;
   position: fixed;
   top: 0;
-  z-index: 1000;
+  z-index: 9999;
   width: 100%;
 `;
 
@@ -167,6 +167,7 @@ const MobileMenuButton = styled.button`
   }
 
   span {
+    display: block;
     width: 24px;
     height: 2px;
     background-color: #4b5563;
