@@ -468,8 +468,8 @@ const Homepage: React.FC = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-
-    if (searchData.city) params.append('woningplaats', searchData.city.toLowerCase());
+    const normalizedCity = (searchData.city || '').trim().replace(/\s+/g, ' ');
+    if (normalizedCity) params.append('woningplaats', normalizedCity.toLowerCase());
     if (searchData.minPrice) params.append('min_prijs', searchData.minPrice);
     if (searchData.maxPrice) params.append('max_prijs', searchData.maxPrice);
     if (searchData.bedrooms) params.append('bedrooms', searchData.bedrooms);

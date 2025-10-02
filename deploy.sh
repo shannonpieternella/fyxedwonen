@@ -59,18 +59,15 @@ if ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" "test -f $SERVER_ROOT/server/.env
   # Install dependencies and restart Node server
   echo "🔁 Installing server deps and restarting API..."
   ssh -i "$SSH_KEY" "$SERVER_USER@$SERVER_IP" bash -lc "\
-    set -e; \
-    cd $SERVER_ROOT/server && \
     if command -v npm >/dev/null 2>&1; then \
-      npm install --production; \
+      npm --prefix /var/www/fyxedwonen/server install --production || exit 1; \
     fi; \
     # Restart running node on port 5001 if present
-    if ss -ltnp | grep -q ':5001'; then \
-      pkill -f '$SERVER_ROOT/server/index.js' || true; \
-    fi; \
-    nohup node index.js > /var/log/fyxedwonen-server.log 2>&1 & disown; \
+    pkill -f '/var/www/fyxedwonen/server/index.js' >/dev/null 2>&1 || true; \
+    nohup node /var/www/fyxedwonen/server/index.js > /var/log/fyxedwonen-server.log 2>&1 & \
     sleep 1; \
-    ss -ltnp | awk '/:5001/ {print \$0}' || true \
+    ss -ltnp | awk '/:5001/ {print \$0}' >/dev/null 2>&1 || true; \
+    exit 0 \
   "
   if [ $? -ne 0 ]; then
       echo "❌ Backend restart failed!"
