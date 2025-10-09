@@ -328,6 +328,8 @@ interface Property {
   verhuurderName: string;
   createdAt: string;
   approvalStatus: string;
+  sourceUrl?: string;
+  offeredSince?: string;
 }
 
 const AdminDashboard: React.FC = () => {

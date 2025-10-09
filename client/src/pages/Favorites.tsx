@@ -244,6 +244,8 @@ interface Property {
   bedrooms: number;
   images: string[];
   addedAt?: string;
+  sourceUrl?: string;
+  offeredSince?: string;
 }
 
 const Favorites: React.FC = () => {

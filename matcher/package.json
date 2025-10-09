@@ -1,0 +1,16 @@
+{
+  "name": "fyxed-matcher",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone matcher for Fyxed Wonen (runs matching + notifications)",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongoose": "^8.0.3",
+    "nodemailer": "^7.0.6"
+  },
+  "scripts": {
+    "start": "node scheduler.js",
+    "init:env": "node scripts/sync-env.js",
+    "run:once": "node scheduler.js --once"
+  }
+}

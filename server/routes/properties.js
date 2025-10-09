@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const Property = require('../models/Property');
+const mongoose = require('mongoose');
 const Message = require('../models/Message');
 
 // Configure multer for file uploads
@@ -42,14 +43,31 @@ router.get('/', async (req, res) => {
       min_prijs,
       max_prijs,
       bedrooms,
+      rooms,
       min_size,
       max_size,
+      furnished,
+      pets,
+      garden,
+      parking,
+      balcony,
+      features,
+      source,
+      available_only = (process.env.PUBLIC_PROPERTIES_AVAILABLE_ONLY || '0'),
       page = 1,
       limit = 20,
       sort = '-createdAt'
     } = req.query;
 
-    const filter = { isActive: true, approvalStatus: 'approved' };
+    const filter = {};
+    const requireActive = (process.env.PUBLIC_PROPERTIES_REQUIRE_ACTIVE || '0') === '1';
+    const approvedOnly = (process.env.PUBLIC_PROPERTIES_REQUIRE_APPROVED || '0') === '1';
+    if (requireActive) filter.isActive = true;
+    if (approvedOnly) filter.approvalStatus = 'approved';
+    if (String(available_only) === '1') {
+      filter.isStillAvailable = true;
+      filter.isArchived = { $ne: true };
+    }
 
     if (city) {
       // Normalize city: allow slugs like "den-haag" by converting hyphens to spaces
@@ -63,9 +81,8 @@ router.get('/', async (req, res) => {
       if (max_prijs) filter.price.$lte = parseInt(max_prijs);
     }
 
-    if (bedrooms) {
-      filter.bedrooms = parseInt(bedrooms);
-    }
+    if (bedrooms) filter.bedrooms = parseInt(bedrooms);
+    if (rooms) filter.rooms = parseInt(rooms);
 
     if (min_size || max_size) {
       filter.size = {};
@@ -73,25 +90,159 @@ router.get('/', async (req, res) => {
       if (max_size) filter.size.$lte = parseInt(max_size);
     }
 
-    const skip = (page - 1) * limit;
+    if (typeof furnished !== 'undefined') {
+      const v = String(furnished).toLowerCase();
+      if (v === 'true' || v === '1') filter.furnished = true;
+      if (v === 'false' || v === '0') filter.furnished = false;
+    }
+    if (typeof pets !== 'undefined') {
+      const v = String(pets).toLowerCase();
+      if (v === 'true' || v === '1') filter.petsAllowed = true;
+      if (v === 'false' || v === '0') filter.petsAllowed = false;
+    }
+    if (typeof garden !== 'undefined') {
+      const v = String(garden).toLowerCase();
+      if (v === 'true' || v === '1') filter.garden = true;
+      if (v === 'false' || v === '0') filter.garden = false;
+    }
+    if (typeof parking !== 'undefined') {
+      const v = String(parking).toLowerCase();
+      if (v === 'true' || v === '1') filter.parking = true;
+      if (v === 'false' || v === '0') filter.parking = false;
+    }
+    if (typeof balcony !== 'undefined') {
+      const v = String(balcony).toLowerCase();
+      if (v === 'true' || v === '1') filter.balcony = true;
+      if (v === 'false' || v === '0') filter.balcony = false;
+    }
+    if (features) {
+      const list = String(features).split(',').map(s=>s.trim()).filter(Boolean);
+      if (list.length) filter.features = { $all: list };
+    }
+    if (source) {
+      const list = String(source).split(',').map(s=>s.trim()).filter(Boolean);
+      if (list.length) filter.source = { $in: list };
+    }
+
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const skip = (pageNum - 1) * limitNum;
 
     const properties = await Property.find(filter)
       .sort(sort)
       .skip(skip)
-      .limit(parseInt(limit));
+      .limit(limitNum);
 
     const total = await Property.countDocuments(filter);
 
     res.json({
       properties,
       pagination: {
-        current: parseInt(page),
-        pages: Math.ceil(total / limit),
+        current: pageNum,
+        pages: Math.max(1, Math.ceil(total / limitNum)),
         total
       }
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// City count (place before :id to avoid route conflicts)
+router.get('/city/:city', async (req, res) => {
+  try {
+    const { city } = req.params;
+    const normalizedCity = String(city).replace(/-/g, ' ');
+    const match = {
+      'address.city': new RegExp(normalizedCity, 'i')
+    };
+    const requireActive = (process.env.PUBLIC_PROPERTIES_REQUIRE_ACTIVE || '0') === '1';
+    const approvedOnly = (process.env.PUBLIC_PROPERTIES_REQUIRE_APPROVED || '0') === '1';
+    const availableOnly = (process.env.PUBLIC_PROPERTIES_AVAILABLE_ONLY || '0') === '1';
+    if (requireActive) match.isActive = true;
+    if (approvedOnly) match.approvalStatus = 'approved';
+    if (availableOnly) { match.isStillAvailable = true; match.isArchived = { $ne: true }; }
+    const count = await Property.countDocuments(match);
+    res.json({ city, count });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Distinct cities with counts (for public directory and search)
+router.get('/cities', async (req, res) => {
+  try {
+    const { q, limit = 500 } = req.query;
+    const match = { 'address.city': { $ne: null } };
+    const requireActive = (process.env.PUBLIC_PROPERTIES_REQUIRE_ACTIVE || '0') === '1';
+    const approvedOnly = (process.env.PUBLIC_PROPERTIES_REQUIRE_APPROVED || '0') === '1';
+    const availableOnly = (process.env.PUBLIC_PROPERTIES_AVAILABLE_ONLY || '0') === '1';
+    if (requireActive) match.isActive = true;
+    if (approvedOnly) match.approvalStatus = 'approved';
+    if (availableOnly) { match.isStillAvailable = true; match.isArchived = { $ne: true }; }
+    if (q) match['address.city'] = new RegExp(String(q), 'i');
+
+    const pipeline = [
+      { $match: match },
+      { $group: {
+          _id: { $toLower: '$address.city' },
+          name: { $first: '$address.city' },
+          count: { $sum: 1 }
+        } },
+      { $sort: { count: -1, name: 1 } },
+      { $limit: parseInt(limit) }
+    ];
+
+    let cities = await Property.aggregate(pipeline);
+    // Compute slug and ensure plain object
+    cities = cities.map(c => ({
+      name: c.name,
+      count: c.count,
+      slug: String(c.name || '').toLowerCase().replace(/\s+/g, '-')
+    }));
+    // Grand total: count all properties in the collection (independent of city filters)
+    let grandTotal = 0;
+    try {
+      grandTotal = await Property.estimatedDocumentCount();
+      if (!grandTotal || Number.isNaN(grandTotal)) {
+        grandTotal = await Property.countDocuments({});
+      }
+    } catch (_) {
+      grandTotal = cities.reduce((sum, c) => sum + (Number(c.count) || 0), 0);
+    }
+    res.json({ success: true, cities, total: grandTotal });
+  } catch (error) {
+    console.error('cities error:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
+
+// Debug stats for troubleshooting DB mismatches (safe, minimal info)
+// IMPORTANT: This must be before /:id route to avoid being caught by the parameter matcher
+router.get('/_stats', async (req, res) => {
+  try {
+    const col = mongoose.connection.collection('properties');
+    const [estimated, exact] = await Promise.all([
+      col.estimatedDocumentCount().catch(()=>0),
+      col.countDocuments({}).catch(()=>0)
+    ]);
+    const topCities = await Property.aggregate([
+      { $match: { 'address.city': { $ne: null } } },
+      { $group: { _id: '$address.city', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 5 }
+    ]).catch(()=>[]);
+    res.json({
+      success: true,
+      db: {
+        name: mongoose.connection?.name,
+        host: mongoose.connection?.host,
+      },
+      counts: { estimated, exact },
+      topCities
+    });
+  } catch (e) {
+    res.status(500).json({ success:false, error: e.message });
   }
 });
 
@@ -138,20 +289,7 @@ router.post('/', upload.array('images', 10), async (req, res) => {
   }
 });
 
-router.get('/city/:city', async (req, res) => {
-  try {
-    const { city } = req.params;
-    const normalizedCity = String(city).replace(/-/g, ' ');
-    const count = await Property.countDocuments({
-      'address.city': new RegExp(normalizedCity, 'i'),
-      isActive: true,
-      approvalStatus: 'approved'
-    });
-    res.json({ city, count });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// (moved /city/:city above)
 
 // Contact property owner
 router.post('/contact', async (req, res) => {

@@ -1,0 +1,18 @@
+{
+  "name": "pararius",
+  "startUrlTemplate": "https://www.pararius.nl/huurwoningen/{citySlug}",
+  "list": {
+    "itemLink": "section.search-listing article a, .listing-search-item a",
+    "next": "a[rel=next]"
+  },
+  "hrefPattern": "/(appartement|huis|kamer|studio|eengezinswoning|benedenwoning|bovenwoning|galerijflat)-te-huur/",
+  "detail": {
+    "title": "h1",
+    "priceText": "body",
+    "sizeText": "li",
+    "roomsText": "li",
+    "images": "img",
+    "furnishedKeywords": ["gemeubileerd", "ongemeubileerd"]
+  },
+  "idFromUrl": "slug-last-segment"
+}

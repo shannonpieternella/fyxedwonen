@@ -184,10 +184,7 @@ const Login: React.FC = () => {
   // Redirect away if already logged in
   React.useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
-    if (verhuurderLoggedIn) {
-      navigate('/verhuurders/dashboard', { replace: true });
-    } else if (loggedIn) {
+    if (loggedIn) {
       navigate('/dashboard', { replace: true });
     }
   }, [navigate]);
@@ -203,14 +200,30 @@ const Login: React.FC = () => {
       // Successful backend login
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userEmail', data.user.email);
-      localStorage.setItem('paymentCompleted', 'true');
+      try {
+        const name = [data.user.firstName, data.user.lastName].filter(Boolean).join(' ').trim();
+        if (name) localStorage.setItem('userName', name);
+      } catch {}
       localStorage.setItem('authToken', data.token);
-      localStorage.setItem('token', data.token); // ensure axios interceptor picks it up
+      localStorage.setItem('token', data.token); // axios interceptor
 
-      // Trigger custom event for real-time updates
-      window.dispatchEvent(new Event('authStatusChanged'));
-
-      navigate('/dashboard');
+      // Check abonnement status en routeer slim
+      try {
+        const mod = await import('../services/api');
+        const status = await mod.subscriptionApi.status();
+        const isActive = status?.subscription?.status === 'active';
+        if (isActive) {
+          localStorage.setItem('paymentCompleted', 'true');
+        } else {
+          localStorage.removeItem('paymentCompleted');
+        }
+        window.dispatchEvent(new Event('authStatusChanged'));
+        navigate(isActive ? '/matches' : '/subscription');
+      } catch (e) {
+        // Fallback: ga naar dashboard
+        window.dispatchEvent(new Event('authStatusChanged'));
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       const message = err?.response?.data?.message || 'Ongeldige inloggegevens of server niet bereikbaar';
       setError(message);

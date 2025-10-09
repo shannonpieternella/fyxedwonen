@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Huurwoningen scraper every 10 minutes (staggered)
+
+[Timer]
+OnCalendar=*:5/10
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

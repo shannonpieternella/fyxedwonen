@@ -216,10 +216,7 @@ const Register: React.FC = () => {
   // Redirect if already logged in
   React.useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
-    if (verhuurderLoggedIn) {
-      navigate('/verhuurders/dashboard', { replace: true });
-    } else if (loggedIn) {
+    if (loggedIn) {
       navigate('/dashboard', { replace: true });
     }
   }, [navigate]);

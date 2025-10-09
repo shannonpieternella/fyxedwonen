@@ -1,0 +1,10 @@
+[Unit]
+Description=Run Kamernet scraper every 10 minutes (staggered)
+
+[Timer]
+OnCalendar=*:2/10
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

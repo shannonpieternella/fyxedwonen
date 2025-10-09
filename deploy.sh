@@ -67,6 +67,35 @@ else
   echo "⚠️ No .env on server; skipping backend deploy and restart to avoid downtime."
 fi
 
+## Deploy scraper
+echo "🔍 Deploying scraper..."
+if command -v rsync >/dev/null 2>&1; then
+    rsync -avz --delete \
+      --exclude 'node_modules/' \
+      --exclude '.venv/' \
+      --exclude '__pycache__/' \
+      --exclude '*.pyc' \
+      -e "ssh -i $SSH_KEY" \
+      scraper/ "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/scraper/"
+else
+    echo "⚠️ rsync not found; uploading scraper via scp (no delete)." >&2
+    scp -i "$SSH_KEY" -r scraper/* "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/scraper/"
+fi
+echo "✅ Scraper deployed"
+
+## Deploy matcher
+echo "🎯 Deploying matcher..."
+if command -v rsync >/dev/null 2>&1; then
+    rsync -avz --delete \
+      --exclude 'node_modules/' \
+      -e "ssh -i $SSH_KEY" \
+      matcher/ "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/matcher/"
+else
+    echo "⚠️ rsync not found; uploading matcher via scp (no delete)." >&2
+    scp -i "$SSH_KEY" -r matcher/* "$SERVER_USER@$SERVER_IP:$SERVER_ROOT/matcher/"
+fi
+echo "✅ Matcher deployed"
+
 echo "✅ Frontend upload successful!"
 
 # Reload nginx

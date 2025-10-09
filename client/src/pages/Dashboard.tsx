@@ -1,477 +1,333 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { API_BASE_URL } from '../services/api';
+import { matchesApi, preferencesApi, dashboardApi } from '../services/api';
 
-const PageContainer = styled.div`
+const Page = styled.div`
   min-height: 100vh;
-  background: #f8fafc;
-  padding: 40px 20px;
-`;
-
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Header = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const WelcomeTitle = styled.h1`
-  color: #1f2937;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 8px;
-`;
-
-const WelcomeSubtitle = styled.p`
-  color: #6b7280;
-  font-size: 16px;
-  margin-bottom: 24px;
-`;
-
-const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-`;
-
-const StatCard = styled.div`
-  background: linear-gradient(135deg, #38b6ff, #2196f3);
-  color: white;
+  background: #eef2f7;
   padding: 24px;
-  border-radius: 12px;
-  text-align: center;
 `;
 
-const StatNumber = styled.div`
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
+const Shell = styled.div`
+  max-width: 1200px; margin: 0 auto; display:grid; grid-template-columns: 1fr 360px; gap: 22px;
+  @media (max-width: 1100px){ grid-template-columns: 1fr; }
 `;
 
-const StatLabel = styled.div`
-  font-size: 14px;
-  opacity: 0.9;
+const Card = styled.div`
+  background: #fff; border:1px solid #e5e7eb; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 `;
 
-const MainContent = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 32px;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
+const Guide = styled(Card)`
+  padding: 22px;
 `;
 
-const ContentSection = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+const H1 = styled.h1`
+  font-size: 28px; margin: 0 0 8px 0; color: #0f172a; letter-spacing: -0.01em;
 `;
 
-const SectionTitle = styled.h2`
-  color: #1f2937;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+const Muted = styled.p`
+  color: #475569; margin: 0;
 `;
 
-const SectionIcon = styled.span`
-  font-size: 24px;
+const ProgressWrap = styled.div`
+  display:flex; align-items:center; gap:10px; margin-top: 10px; color:#64748b; font-weight:800;
+`;
+const ProgressOuter = styled.div`
+  flex:1; height: 8px; background:#e5e7eb; border-radius: 999px; overflow:hidden;
+`;
+const ProgressInner = styled.div<{w:number}>`
+  height:100%; background:#38b6ff; width: ${p=>Math.max(0, Math.min(100, p.w))}%;
 `;
 
-const FavoritesList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+const StatRow = styled.div`
+  display:grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px;
+  @media (max-width: 700px){ grid-template-columns: 1fr 1fr; }
 `;
 
-const FavoriteItem = styled.div`
-  display: flex;
-  gap: 16px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  transition: all 0.2s;
-
-  &:hover {
-    border-color: #38b6ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
+const Stat = styled(Card)`
+  display:grid; gap:6px; align-items:start;
+  .k{ color:#64748b; font-weight:700; }
+  .v{ font-size:22px; font-weight:900; color:#0f172a; }
 `;
 
-const PropertyImage = styled.img`
-  width: 80px;
-  height: 60px;
-  border-radius: 8px;
-  object-fit: cover;
+const SectionHead = styled.div`
+  display:flex; align-items:center; justify-content:space-between; margin: 14px 0 10px;
+`;
+const SecTitle = styled.h2`
+  margin:0; font-size:22px; color:#0f172a; letter-spacing:-0.01em;
+`;
+const SmallLink = styled(Link)`
+  font-size:14px; color:#38b6ff; text-decoration:none; font-weight:700; &:hover{ text-decoration:underline; }
 `;
 
-const PropertyInfo = styled.div`
-  flex: 1;
+const MatchGrid = styled.div`
+  display:grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  @media (max-width: 900px){ grid-template-columns: 1fr; }
+`;
+const MatchCard = styled(Card)`
+  padding: 0; overflow:hidden; border-radius: 14px; border-color:#dbe3ea;
+`;
+const MatchImg = styled.div<{src:string}>`
+  height: 180px; background: url(${p=>p.src}) center/cover no-repeat;
+`;
+const MatchBody = styled.div`
+  padding: 12px 14px; background:#f0f9ff;
+`;
+const Chips = styled.div`
+  display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px;
+  span{ background:#e6f4ff; color:#0f172a; border:1px solid #cfe9ff; border-radius: 10px; padding:4px 8px; font-size:12px; font-weight:700; }
 `;
 
-const PropertyTitle = styled.h3`
-  color: #1f2937;
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
+const Side = styled.div`display:flex; flex-direction:column; gap:16px;`;
+
+const List = styled.div`
+  display:grid; gap:8px; margin-top: 10px;
+`;
+const ListItem = styled.div`
+  display:flex; align-items:center; justify-content:space-between; background:#f8fafc; border:1px solid #e5e7eb; padding:10px 12px; border-radius: 12px; font-weight:700;
 `;
 
-const PropertyDetails = styled.div`
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 8px;
-`;
-
-const PropertyPrice = styled.div`
-  color: #38b6ff;
-  font-size: 16px;
-  font-weight: 600;
-`;
-
-const EmptyState = styled.div`
-  text-align: center;
-  padding: 48px 24px;
-  color: #6b7280;
-
-  .icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
-
-  .title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #1f2937;
-  }
-
-  .description {
-    margin-bottom: 24px;
-  }
-`;
-
-const ActionButton = styled(Link)`
-  background: #38b6ff;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  display: inline-block;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #2196f3;
-  }
-`;
-
-const RemoveButton = styled.button`
-  color: #ef4444;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 4px;
-  border-radius: 4px;
-
-  &:hover {
-    background: #fee2e2;
-  }
-`;
-
-const Sidebar = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-`;
-
-const QuickActions = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const ActionList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-
-const QuickActionItem = styled(Link)`
-  display: flex;
-  align-items: center;
-  padding: 16px 20px;
-  border-radius: 12px;
-  text-decoration: none;
-  color: #4b5563;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  font-weight: 500;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #38b6ff;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(56, 182, 255, 0.3);
-    border-color: #38b6ff;
-  }
-`;
-
-const RecentSearches = styled.div`
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const SearchItem = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f3f4f6;
-
-  &:last-child {
-    border-bottom: none;
-  }
-`;
-
-const SearchText = styled.span`
-  color: #4b5563;
-  font-size: 14px;
-`;
-
-const SearchCount = styled.span`
-  color: #38b6ff;
-  font-size: 12px;
-  background: #f0f9ff;
-  padding: 2px 8px;
-  border-radius: 12px;
-`;
 
 const Dashboard: React.FC = () => {
-  const [userEmail, setUserEmail] = useState('');
-  const [favorites, setFavorites] = useState<any[]>([]);
-  const [recentSearches, setRecentSearches] = useState<any[]>([]);
-  const [totalPropertiesAvailable, setTotalPropertiesAvailable] = useState(0);
+  const [matches, setMatches] = useState<any[]>([]);
+  const [matchesLoading, setMatchesLoading] = useState<boolean>(true);
+  const [searches, setSearches] = useState<{label:string; radius?:string}[]>([]);
+  const [expectedPerWeek, setExpectedPerWeek] = useState<number | null>(null);
+  const [days, setDays] = useState<number>(1);
+  const [stats, setStats] = useState<{total:number; viewed:number; interested:number}>({total:0, viewed:0, interested:0});
+  const [progressPercent, setProgressPercent] = useState<number>(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in and has paid
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const paymentCompleted = localStorage.getItem('paymentCompleted') === 'true';
-    const email = localStorage.getItem('userEmail');
+    // Rely on API auth; 401 handled globally by axios interceptor
 
-    if (!isLoggedIn || !paymentCompleted) {
-      navigate('/login');
-      return;
-    }
-
-    setUserEmail(email || '');
-
-    // Load favorites from localStorage
-    const savedFavorites = localStorage.getItem('favorites');
-    if (savedFavorites) {
-      setFavorites(JSON.parse(savedFavorites));
-    }
-
-    // Fetch total properties available from real database
-    const fetchTotalProperties = async () => {
+    // Prefs → zoekopdrachten
+    (async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/properties?limit=1`);
-        const data = await response.json();
-
-        if (response.ok) {
-          setTotalPropertiesAvailable(data.pagination?.total || 0);
+        const p = await preferencesApi.get();
+        const prefs = (p && (p as any).preferences) ? (p as any).preferences : p;
+        const list = (prefs?.cities || prefs?.searches || []) as any[];
+        if (Array.isArray(list) && list.length) {
+          setSearches(list.map((c:any)=>({label: c.name || c.city || String(c), radius: c.radius || '≤ 10km'})));
         } else {
-          setTotalPropertiesAvailable(0);
+          const raw = localStorage.getItem('onboardingPrefs');
+          if (raw){ const ob=JSON.parse(raw); const city = ob?.filters?.city; if (city) setSearches([{label: city, radius:'≤ 10km'}]); }
         }
-      } catch (error) {
-        console.error('Error fetching total properties:', error);
-        setTotalPropertiesAvailable(0);
+      } catch {
+        // Fallback to cached preferences or onboardingPrefs
+        try {
+          const rawCache = localStorage.getItem('preferencesCache');
+          if (rawCache){ const prefs = JSON.parse(rawCache); const list = prefs?.cities || [];
+            if (Array.isArray(list) && list.length) setSearches(list.map((c:any)=>({label: String(c), radius:'≤ 10km'})));
+          } else {
+            const raw = localStorage.getItem('onboardingPrefs');
+            if (raw){ const ob=JSON.parse(raw); const city = ob?.filters?.city; if (city) setSearches([{label: city, radius:'≤ 10km'}]); }
+          }
+        } catch {}
       }
-    };
+    })();
 
-    fetchTotalProperties();
+    // Matches (with live fallback)
+    (async () => {
+      setMatchesLoading(true);
+      try {
+        // Use live=1 so preview reflects current preferences immediately
+        const res = await matchesApi.list({ limit: 4, live: 1 });
+        const items = (res && res.matches) ? res.matches.map((x:any)=> ({
+          // normalize shape for virtual matches
+          ...(x.property || {}),
+          _matchId: x._id,
+          score: x.score,
+        })) : (res?.items || res || []);
+        setMatches(items.slice(0,4));
+      } catch {
+        try {
+          const raw = localStorage.getItem('dashboardMatchesCache');
+          if (raw) setMatches(JSON.parse(raw));
+        } catch { /* ignore */ }
+      } finally {
+        setMatchesLoading(false);
+      }
+    })();
 
-    // Load recent searches - first check localStorage for user's actual searches
-    const loadRecentSearches = async () => {
-      const savedSearches = localStorage.getItem('recentSearches');
-      if (savedSearches) {
-        const userSearches = JSON.parse(savedSearches);
-        // Update counts for user's searches with real data
-        if (userSearches.length > 0) {
-          const updatedSearches = await Promise.all(
-            userSearches.map(async (search: any) => {
-              try {
-                const response = await fetch(`${API_BASE_URL}/properties/city/${search.query}`);
-                if (response.ok) {
-                  const data = await response.json();
-                  return { ...search, count: data.count };
-                }
-                return search;
-              } catch (error) {
-                console.error('Error updating search count:', error);
-                return search;
-              }
-            })
-          );
-          setRecentSearches(updatedSearches);
-        } else {
-          setRecentSearches([]);
+    // Geen buddy- of reactiebrief-setup meer
+
+    // Dashboard metrics (real data)
+    (async () => {
+      try {
+        const res = await dashboardApi.metrics();
+        const m = (res && res.metrics) ? res.metrics : res;
+        // searches (if provided)
+        if (Array.isArray(res?.searches) && res.searches.length) {
+          setSearches(res.searches.map((c:string)=>({label: c, radius: '≤ 10km'})));
         }
-      } else {
-        // No saved searches - show empty array instead of mock data
-        setRecentSearches([]);
-      }
-    };
+        // expected per week
+        if (typeof m?.expectedPerWeek === 'number') setExpectedPerWeek(m.expectedPerWeek);
+        // counts - use real data from matches
+        const total = m?.counts?.totalMatches || 0;
+        const viewed = m?.counts?.viewedMatches || 0;
+        const interested = m?.counts?.interestedCount || 0;
 
-    loadRecentSearches();
+        setStats({ total, viewed, interested });
+        setDays(m?.daysSinceSignup || 1);
+        setProgressPercent(m?.progressPercent || 0);
+      } catch (e) {
+        console.error('Failed to load dashboard metrics:', e);
+      }
+    })();
   }, [navigate]);
 
-  const removeFavorite = (propertyId: string) => {
-    const updatedFavorites = favorites.filter(fav => fav.id !== propertyId);
-    setFavorites(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-  };
-
-  const userFirstName = userEmail.split('@')[0] || 'Gebruiker';
-
   return (
-    <PageContainer>
-      <Container>
-        <Header>
-          <WelcomeTitle>Welkom terug, {userFirstName}!</WelcomeTitle>
-          <WelcomeSubtitle>
-            Hier is een overzicht van je huurwoning zoektocht en opgeslagen favorieten.
-          </WelcomeSubtitle>
+    <Page>
+      <Shell>
+        <div>
+          <Guide>
+            <H1>Verhuisgids</H1>
+            <Muted>Een nieuwe huurwoning vinden is niet makkelijk in de huidige markt. Daarom krijg je van ons alles wat je nodig hebt om je zoektocht een kickstart te geven.</Muted>
+            <ProgressWrap>
+            <ProgressOuter><ProgressInner w={progressPercent} /></ProgressOuter>
+            <span>{progressPercent}% voltooid</span>
+            </ProgressWrap>
+          </Guide>
 
-          <StatsGrid>
-            <StatCard>
-              <StatNumber>{favorites.length}</StatNumber>
-              <StatLabel>Favoriete woningen</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatNumber>{recentSearches.length}</StatNumber>
-              <StatLabel>Recente zoekopdrachten</StatLabel>
-            </StatCard>
-            <StatCard>
-              <StatNumber>{totalPropertiesAvailable}</StatNumber>
-              <StatLabel>Beschikbare woningen</StatLabel>
-            </StatCard>
-            <StatCard style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)' }}>
-              <StatNumber>✓</StatNumber>
-              <StatLabel>Premium Actief</StatLabel>
-            </StatCard>
-          </StatsGrid>
-        </Header>
+          <StatRow>
+            <Stat><div className="k">Zoektocht</div><div className="v">{days} dagen</div></Stat>
+            <Stat><div className="k">Aantal matches</div><div className="v">{matches.length > 0 ? matches.length : stats.total}</div></Stat>
+            <Stat><div className="k">Stad</div><div className="v">{searches.length > 0 ? searches[0].label : '—'}</div></Stat>
+            <Stat><div className="k">Verwacht per week</div><div className="v">{expectedPerWeek ?? '—'}</div></Stat>
+          </StatRow>
 
-        <MainContent>
-          <ContentSection>
-            <SectionTitle>
-              <SectionIcon></SectionIcon>
-              Favoriete Woningen
-            </SectionTitle>
+          <SectionHead>
+            <SecTitle>Woningmatches</SecTitle>
+            <SmallLink to="/matches">Matchgeschiedenis bekijken</SmallLink>
+          </SectionHead>
 
-            {favorites.length > 0 ? (
-              <FavoritesList>
-                {favorites.map((property) => (
-                  <FavoriteItem key={property.id}>
-                    <PropertyImage
-                      src={property.images?.[0] || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=300&h=200&fit=crop'}
-                      alt={property.title}
-                    />
-                    <PropertyInfo>
-                      <PropertyTitle>{property.title}</PropertyTitle>
-                      <PropertyDetails>
-                        {property.address?.city} • {property.rooms} kamers • {property.size} m²
-                      </PropertyDetails>
-                      <PropertyPrice>€{property.price?.toLocaleString()} per maand</PropertyPrice>
-                    </PropertyInfo>
-                    <RemoveButton onClick={() => removeFavorite(property.id)}>
-                      ×
-                    </RemoveButton>
-                  </FavoriteItem>
-                ))}
-              </FavoritesList>
-            ) : (
-              <EmptyState>
-                <div className="icon"></div>
-                <div className="title">Nog geen favorieten</div>
-                <div className="description">
-                  Begin met zoeken en sla interessante woningen op als favoriet.
-                </div>
-                <ActionButton to="/woning">Woningen Bekijken</ActionButton>
-              </EmptyState>
-            )}
-          </ContentSection>
-
-          <Sidebar>
-            <QuickActions>
-              <SectionTitle>
-                <SectionIcon></SectionIcon>
-                Snelle Acties
-              </SectionTitle>
-              <ActionList>
-                <QuickActionItem to="/woning">
-                  Woningen Zoeken
-                </QuickActionItem>
-                <QuickActionItem to="/dashboard/profile">
-                  Profiel Bewerken
-                </QuickActionItem>
-                <QuickActionItem to="/dashboard/search-alerts">
-                  Zoek Alerts
-                </QuickActionItem>
-                <QuickActionItem to="/dashboard/conversations">
-                  Mijn Reacties
-                </QuickActionItem>
-              </ActionList>
-            </QuickActions>
-
-            <RecentSearches>
-              <SectionTitle>
-                <SectionIcon></SectionIcon>
-                Recente Zoekopdrachten
-              </SectionTitle>
-              {recentSearches.length > 0 ? (
-                recentSearches.map((search, index) => (
-                  <SearchItem key={index}>
-                    <SearchText>{search.query}</SearchText>
-                    <SearchCount>{search.count} woningen</SearchCount>
-                  </SearchItem>
-                ))
-              ) : (
-                <div style={{
-                  textAlign: 'center',
-                  color: '#6b7280',
-                  fontSize: '14px',
-                  padding: '20px 0',
-                  fontStyle: 'italic'
-                }}>
-                  Nog geen zoekopdrachten uitgevoerd
-                </div>
+          {matchesLoading ? (
+            <Card>
+              <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'40px 0', color:'#475569'}}>
+                <div style={{fontSize:40, marginBottom:12}}>⏳</div>
+                <div style={{fontWeight:700}}>Matches laden...</div>
+              </div>
+            </Card>
+          ) : (
+            <MatchGrid>
+              {matches.length === 0 && (
+                <Card>
+                  Nog geen matches zichtbaar. Stel je <Link to="/preferences">voorkeuren</Link> in of bekijk alvast <Link to="/woning">woningen</Link>.
+                </Card>
               )}
-            </RecentSearches>
-          </Sidebar>
-        </MainContent>
-      </Container>
-    </PageContainer>
+              {matches.map((m:any)=>{
+              const img = m.images?.[0] || 'https://images.unsplash.com/photo-1560185008-b033106af2fb?w=600&h=400&fit=crop';
+              const href = m.sourceUrl ? m.sourceUrl : (m._id ? `/woning/${m._id}` : undefined);
+              const anchorProps = href ? { href, target: m.sourceUrl ? '_blank' : undefined, rel: m.sourceUrl ? 'noopener noreferrer' : undefined } : {};
+              return (
+                <a key={m._matchId || m._id} {...anchorProps} style={{textDecoration:'none'}}>
+                  <MatchCard>
+                    <MatchImg src={img} />
+                    <MatchBody>
+                      <div style={{fontWeight:900, color:'#0f172a'}}>{m.title || m.address?.street || 'Woning'}</div>
+                      <div style={{color:'#64748b', fontSize:13}}>{m.address?.city || '—'} • {m.size || '—'}m² • €{m.price || '—'}</div>
+                      <Chips>
+                        <span>📍 {m.address?.city || '—'}</span>
+                        <span>🛏 {m.rooms || 2}</span>
+                        <span>📐 {m.size || 60}m²</span>
+                        <span>💶 €{m.price || 1250}</span>
+                      </Chips>
+                    </MatchBody>
+                  </MatchCard>
+                </a>
+              );
+            })}
+            </MatchGrid>
+          )}
+        </div>
+
+        <Side>
+          <Card>
+            <SectionHead>
+              <SecTitle>Voorkeuren</SecTitle>
+              <SmallLink to="/preferences">Openen</SmallLink>
+            </SectionHead>
+            <div style={{color:'#475569'}}>Stel je steden, budget en woonwensen in en ontvang betere matches.</div>
+          </Card>
+
+          <Card>
+            <SectionHead>
+              <SecTitle>Abonnement</SecTitle>
+              <SmallLink to="/subscription">Beheren</SmallLink>
+            </SectionHead>
+            <div style={{color:'#475569'}}>Bekijk of verleng je toegang en regel je betaling.</div>
+          </Card>
+
+          <Card>
+            <SectionHead>
+              <SecTitle>Zoekopdrachten</SecTitle>
+              <SmallLink to="/preferences">Instellingen</SmallLink>
+            </SectionHead>
+              <div style={{background:'#dcfce7', border:'1px solid #86efac', color:'#065f46', padding:'10px 12px', borderRadius:10, fontWeight:700, fontSize:13}}>
+              Met jouw huidige zoekopdrachten kun je gemiddeld {expectedPerWeek ?? '—'} matches per week verwachten
+            </div>
+            <List>
+              {searches.map((s, i)=> (
+                <ListItem key={i}><span>● {s.label}</span><span style={{color:'#64748b', fontWeight:700}}>{s.radius || ''}</span></ListItem>
+              ))}
+              <SmallLink to="/preferences">+ nieuwe zoekopdracht</SmallLink>
+            </List>
+          </Card>
+
+          <Card>
+            <SectionHead>
+              <SecTitle>Snelle Acties</SecTitle>
+            </SectionHead>
+            <div style={{display:'grid', gap:10}}>
+              <Link to="/woning" style={{textDecoration:'none', display:'block', background:'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', border:'2px solid #93c5fd', borderRadius:12, padding:'14px 16px', transition:'all 0.2s'}}>
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:12}}>
+                    <span style={{fontSize:24}}>🏘️</span>
+                    <div>
+                      <div style={{fontWeight:800, color:'#0f172a', fontSize:15}}>Browse alle woningen</div>
+                      <div style={{color:'#475569', fontSize:13, fontWeight:600}}>Bekijk het volledige aanbod</div>
+                    </div>
+                  </div>
+                  <span style={{color:'#38b6ff', fontSize:20}}>→</span>
+                </div>
+              </Link>
+
+              <Link to="/matches" style={{textDecoration:'none', display:'block', background:'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)', border:'2px solid #86efac', borderRadius:12, padding:'14px 16px', transition:'all 0.2s'}}>
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:12}}>
+                    <span style={{fontSize:24}}>🎯</span>
+                    <div>
+                      <div style={{fontWeight:800, color:'#0f172a', fontSize:15}}>Bekijk je matches</div>
+                      <div style={{color:'#475569', fontSize:13, fontWeight:600}}>Persoonlijk geselecteerde woningen</div>
+                    </div>
+                  </div>
+                  <span style={{color:'#10b981', fontSize:20}}>→</span>
+                </div>
+              </Link>
+
+              <Link to="/preferences" style={{textDecoration:'none', display:'block', background:'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', border:'2px solid #fbbf24', borderRadius:12, padding:'14px 16px', transition:'all 0.2s'}}>
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:12}}>
+                    <span style={{fontSize:24}}>⚙️</span>
+                    <div>
+                      <div style={{fontWeight:800, color:'#0f172a', fontSize:15}}>Pas voorkeuren aan</div>
+                      <div style={{color:'#475569', fontSize:13, fontWeight:600}}>Krijg betere matches</div>
+                    </div>
+                  </div>
+                  <span style={{color:'#f59e0b', fontSize:20}}>→</span>
+                </div>
+              </Link>
+            </div>
+          </Card>
+
+          {/* Reactiebrief en Zoekbuddy panelen verwijderd */}
+
+          
+        </Side>
+      </Shell>
+    </Page>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { API_BASE_URL } from '../services/api';
+import { subscriptionApi } from '../services/api';
 
 const PageContainer = styled.div`
   min-height: 100vh;
@@ -70,52 +70,38 @@ const PaymentSuccess: React.FC = () => {
 
   useEffect(() => {
     const verifyPayment = async () => {
-      if (sessionId) {
-        try {
-          // Verify payment with backend
-          const response = await fetch(`${API_BASE_URL}/stripe/verify-payment/${sessionId}`);
-          const paymentData = await response.json();
-
-          if (paymentData.status === 'paid') {
-            // Activate account
+      if (!sessionId) {
+        console.warn('Geen session_id in URL; betaling niet gevalideerd.');
+        return;
+      }
+      try {
+        const res = await subscriptionApi.verifyPayment(sessionId);
+          if (res?.success) {
             localStorage.setItem('paymentCompleted', 'true');
             localStorage.setItem('isLoggedIn', 'true');
-
-            // Get user data from registration
             const tempUserData = localStorage.getItem('tempUserData');
             if (tempUserData) {
               const userData = JSON.parse(tempUserData);
               localStorage.setItem('userEmail', userData.email);
+              try {
+                const name = [userData.firstName, userData.lastName].filter(Boolean).join(' ').trim();
+                if (name) localStorage.setItem('userName', name);
+              } catch {}
               localStorage.removeItem('tempUserData');
             }
-
-            // Trigger custom event for real-time updates
             window.dispatchEvent(new Event('authStatusChanged'));
-
-            console.log('Payment verified and activated!', paymentData);
-          }
-        } catch (error) {
-          console.error('Payment verification error:', error);
+          // Automatisch door naar dashboard
+          setTimeout(() => navigate('/dashboard'), 1200);
+        } else {
+          console.warn('Betaling niet bevestigd door backend.');
         }
-      } else {
-        // Fallback: activate anyway for demo
-        localStorage.setItem('paymentCompleted', 'true');
-        localStorage.setItem('isLoggedIn', 'true');
-
-        const tempUserData = localStorage.getItem('tempUserData');
-        if (tempUserData) {
-          const userData = JSON.parse(tempUserData);
-          localStorage.setItem('userEmail', userData.email);
-          localStorage.removeItem('tempUserData');
-        }
-
-        // Trigger custom event for real-time updates
-        window.dispatchEvent(new Event('authStatusChanged'));
+      } catch (error) {
+        console.error('Payment verification error:', error);
       }
     };
 
     verifyPayment();
-  }, [sessionId]);
+  }, [sessionId, navigate]);
 
   const handleGoToDashboard = () => {
     navigate('/dashboard');
@@ -129,12 +115,15 @@ const PaymentSuccess: React.FC = () => {
         <Message>
           Bedankt voor je betaling! Je account is nu geactiveerd en je hebt toegang tot alle premium functies van Fyxed Wonen.
         </Message>
-        <Button onClick={handleGoToDashboard}>
-          Ga naar Dashboard
-        </Button>
+        <Button onClick={handleGoToDashboard}>Ga naar Dashboard</Button>
         {sessionId && (
           <LoadingText>
             Sessie ID: {sessionId.substring(0, 20)}...
+          </LoadingText>
+        )}
+        {!sessionId && (
+          <LoadingText>
+            Geen session_id gevonden. Als je een betaling hebt gedaan maar niet wordt doorgestuurd, klik dan op de knop of ga terug naar de betaalpagina.
           </LoadingText>
         )}
       </SuccessCard>

@@ -1,0 +1,19 @@
+{
+  "name": "huurwoningen",
+  "startUrlTemplates": [
+    "https://www.huurwoningen.nl/in/{citySlug}/"
+  ],
+  "list": {
+    "itemLink": "a[href*='/huren/']",
+    "next": "a[rel='next'], a[aria-label='Volgende'], a[aria-label='Next']"
+  },
+  "hrefPattern": "^/huren/[^/]+/(\\d+)(/.*)?$",
+  "detail": {
+    "title": "h1",
+    "priceText": "*",
+    "sizeText": "li",
+    "images": "img",
+    "furnishedKeywords": ["gemeubileerd", "gestoffeerd"]
+  },
+  "notes": "Huurwoningen config for ConfigSpider. Matches detail URLs like /huren/arnhem/1532948/juventastraat. Adjust selectors if DOM differs."
+}

@@ -30,6 +30,18 @@ router.post('/create-checkout-session', async (req, res) => {
       return res.json({ sessionId: demoSession.id, demo: true });
     }
 
+    // derive base URL (local vs prod)
+    const detectedOrigin = (req.headers.origin || '').toString();
+    const hostHeader = (req.headers.host || '').toString();
+    const devOverride = process.env.DEV_BASE_URL; // optional
+    const isLocalOrigin = /localhost|127\.0\.0\.1/.test(detectedOrigin);
+    const isLocalHost = /localhost|127\.0\.0\.1/.test(hostHeader);
+    const appBaseUrl = devOverride
+      ? devOverride
+      : (isLocalOrigin || isLocalHost)
+        ? (detectedOrigin || 'http://localhost:3000')
+        : (process.env.APP_BASE_URL || detectedOrigin || 'http://localhost:3000');
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card', 'ideal', 'bancontact'],
       line_items: [
@@ -46,8 +58,8 @@ router.post('/create-checkout-session', async (req, res) => {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.origin || 'http://localhost:3000'}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.origin || 'http://localhost:3000'}/payment`,
+      success_url: `${appBaseUrl}/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${appBaseUrl}/payment`,
       customer_email: validEmail,
       billing_address_collection: 'required',
       metadata: {

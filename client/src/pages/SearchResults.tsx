@@ -42,7 +42,7 @@ const SearchFormOverlay = styled.form`
   gap: 1px;
   align-items: center;
   border: 1px solid #f1f5f9;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 20px;
   width: 100%;
   box-sizing: border-box;
@@ -185,7 +185,7 @@ const FilterSelect = styled.select`
 `;
 
 const MobilePriceRow = styled.div`
-  display: contents;
+  display: none;
 
   @media (max-width: 768px) {
     display: grid;
@@ -394,6 +394,14 @@ const PropertyImagePlaceholder = styled.div`
 
 const PropertyInfo = styled.div`
   padding: 20px;
+`;
+
+const SourceLink = styled.a`
+  color: #0ea5e9;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
 `;
 
 const PropertyTitle = styled.h3`
@@ -910,6 +918,18 @@ const SearchResults: React.FC = () => {
                   <PropertyPrice>
                     € {property.price.toLocaleString('nl-NL')} / maand
                   </PropertyPrice>
+                  {property.sourceUrl && (
+                    <div>
+                      <SourceLink
+                        href={property.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        onClick={(e)=> e.stopPropagation()}
+                      >
+                        Bekijk op bron →
+                      </SourceLink>
+                    </div>
+                  )}
                 </PropertyInfo>
               </PropertyCard>
             ))}

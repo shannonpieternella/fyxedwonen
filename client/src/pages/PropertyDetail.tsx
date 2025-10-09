@@ -899,8 +899,20 @@ const PropertyDetail: React.FC = () => {
               <PropertyPrice>
                 € {property.price.toLocaleString()} <span className="period">per maand</span>
               </PropertyPrice>
+              {property.offeredSince && (
+                <div style={{ color:'#64748b', fontWeight:700, marginTop:4 }}>
+                  Aangeboden sinds {new Date(property.offeredSince).toLocaleDateString('nl-NL')}
+                </div>
+              )}
 
               <ActionButtons>
+                {property.sourceUrl && (
+                  <a href={property.sourceUrl} target="_blank" rel="noopener noreferrer nofollow">
+                    <ShareButton as="div" style={{display:'inline-flex', alignItems:'center', gap:6}}>
+                      <span>🔗</span> Bekijk op bron
+                    </ShareButton>
+                  </a>
+                )}
                 <FavoriteButton isFavorite={isFavorite} onClick={toggleFavorite}>
                   <span>{isFavorite ? '❤️' : '🤍'}</span>
                   {isFavorite ? 'Uit favorieten' : 'Aan favorieten toevoegen'}
@@ -960,13 +972,9 @@ const PropertyDetail: React.FC = () => {
                   Je kunt niet reageren op deze woning.
                 </LoginText>
                 <AuthLinks>
-                  {isAuthenticated ? (
-                    <button onClick={() => navigate('/register')}>Upgrade naar Premium</button>
-                  ) : (
-                    <>
-                      <button onClick={() => navigate('/login')}>Inloggen</button> | <button onClick={() => navigate('/register')}>Registreren</button>.
-                    </>
-                  )}
+                  <>
+                    <button onClick={() => navigate('/login')}>Inloggen</button>
+                  </>
                 </AuthLinks>
               </LoginPromptBox>
             ) : (

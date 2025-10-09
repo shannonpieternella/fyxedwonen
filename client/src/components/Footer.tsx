@@ -145,11 +145,9 @@ const Footer: React.FC = () => {
             <FooterTitle>Diensten</FooterTitle>
             <FooterLinkList>
               <FooterLinkItem>
-                <FooterLink to="/woning" onClick={handleLinkClick}>Huurwoningen Zoeken</FooterLink>
+                <FooterLink to="/huurwoningen" onClick={handleLinkClick}>Bekijk huurwoningen</FooterLink>
               </FooterLinkItem>
-              <FooterLinkItem>
-                <FooterLink to="/verhuurders" onClick={handleLinkClick}>Voor Verhuurders</FooterLink>
-              </FooterLinkItem>
+              
               {isLoggedIn && (
                 <FooterLinkItem>
                   <FooterLink to="/dashboard" onClick={handleLinkClick}>Mijn Account</FooterLink>
@@ -170,24 +168,7 @@ const Footer: React.FC = () => {
             </FooterLinkList>
           </FooterSection>
 
-          <FooterSection>
-            <FooterTitle>Voor Verhuurders</FooterTitle>
-            <FooterLinkList>
-              <FooterLinkItem>
-                <FooterLink to="/verhuurders" onClick={handleLinkClick}>Verhuurder Portal</FooterLink>
-              </FooterLinkItem>
-              {!isVerhuurderLoggedIn && (
-                <>
-                  <FooterLinkItem>
-                    <FooterLink to="/verhuurders/login" onClick={handleLinkClick}>Inloggen</FooterLink>
-                  </FooterLinkItem>
-                  <FooterLinkItem>
-                    <FooterLink to="/verhuurders/register" onClick={handleLinkClick}>Registreren</FooterLink>
-                  </FooterLinkItem>
-                </>
-              )}
-            </FooterLinkList>
-          </FooterSection>
+          {/* Verhuurder sectie verwijderd in nieuw business model */}
 
           <FooterSection>
             <FooterTitle>Contact</FooterTitle>

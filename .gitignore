@@ -119,3 +119,15 @@ server/uploads/
 
 # PM2 logs
 .pm2
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Scraper & Matcher
+scraper/.venv/
+matcher/.env

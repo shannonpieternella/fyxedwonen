@@ -72,10 +72,51 @@ const PropertySchema = new mongoose.Schema({
     email: String,
     phone: String
   },
-  // Verhuurder informatie
+  // Scraping metadata (for automated listings)
+  source: {
+    type: String,
+    enum: ['kamernet', 'pararius', 'funda', 'huurwoningen', 'manual'],
+    required: true,
+    default: 'manual',
+    index: true
+  },
+  sourceUrl: {
+    type: String
+  },
+  sourceId: {
+    type: String,
+    index: true
+  },
+  scrapedAt: {
+    type: Date,
+    index: true
+  },
+  offeredSince: {
+    type: Date,
+    index: true
+  },
+  lastCheckedAt: {
+    type: Date,
+    index: true
+  },
+  matchingCheckedAt: {
+    type: Date,
+    index: true
+  },
+  isStillAvailable: {
+    type: Boolean,
+    default: true,
+    index: true
+  },
+  isArchived: {
+    type: Boolean,
+    default: false
+  },
+
+  // Verhuurder informatie (deprecated for scraped listings)
   verhuurderEmail: {
     type: String,
-    required: false // Voor bestaande properties
+    required: false
   },
   verhuurderName: {
     type: String,
@@ -88,7 +129,7 @@ const PropertySchema = new mongoose.Schema({
   approvalStatus: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    default: 'approved' // Auto-approve scraped listings
   },
   approvedAt: {
     type: Date
@@ -103,6 +144,14 @@ const PropertySchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Indexes for performance - compound indexes voor snellere queries
 PropertySchema.index({ 'address.city': 1, price: 1, rooms: 1 });
+PropertySchema.index({ 'address.city': 1, scrapedAt: -1 }); // Stad + recentheid
+PropertySchema.index({ 'address.city': 1, price: 1 }); // Stad + prijs sorting
+PropertySchema.index({ source: 1, sourceId: 1 }, { unique: true, sparse: true }); // Prevent duplicates
+PropertySchema.index({ scrapedAt: -1 }); // Voor finding new listings
+PropertySchema.index({ isStillAvailable: 1, isArchived: 1 }); // Voor cleanup queries
+PropertySchema.index({ price: 1 }); // Voor prijs sorting
+PropertySchema.index({ size: 1 }); // Voor oppervlakte sorting
 
 module.exports = mongoose.model('Property', PropertySchema);

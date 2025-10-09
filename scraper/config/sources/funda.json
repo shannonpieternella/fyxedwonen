@@ -1,0 +1,18 @@
+{
+  "name": "funda",
+  "startUrlTemplates": [
+    "https://www.funda.nl/huur/{citySlug}/"
+  ],
+  "list": {
+    "itemLink": "a[href^='/detail/huur/']",
+    "next": "a[rel='next'], a[aria-label='Volgende'], a[aria-label='Next']"
+  },
+  "hrefPattern": "^/detail/huur/.*/(\\d+)/?$",
+  "detail": {
+    "title": "h1",
+    "priceText": "*",
+    "sizeText": "li",
+    "images": "img"
+  },
+  "notes": "Initial Funda config for ConfigSpider. Uses generic selectors and a detail URL pattern ending in -<digits>. Adjust selectors if DOM structure differs for specific cities or property types."
+}

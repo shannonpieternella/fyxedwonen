@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { ThemeToggle } from './ThemeToggle';
 
-const HeaderContainer = styled.header`
-  background-color: #ffffff;
+const HeaderContainer = styled.header<{ $scrolled?: boolean }>`
+  background-color: rgba(255,255,255,${(p)=>p.$scrolled?0.75:1});
+  backdrop-filter: saturate(180%) blur(${(p)=>p.$scrolled? '12px':'0'});
   border-bottom: 1px solid #e5e7eb;
   position: fixed;
   top: 0;
   z-index: 9999;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-`;
+  box-shadow: ${(p)=>p.$scrolled? '0 4px 18px rgba(0,0,0,0.06)':'0 2px 8px rgba(0,0,0,0.05)'};
+  `;
 
 const HeaderContent = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 16px; /* logo netjes links met kleine gutter */
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 70px;
-  width: 100%;
   position: relative; /* anchor absolute hamburger */
 
   @media (max-width: 768px) {
-    padding: 0 20px;
+    padding: 0 12px;
   }
 `;
 
@@ -50,9 +52,8 @@ const Logo = styled(Link)`
 `;
 
 const Nav = styled.nav<{ isOpen?: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 30px;
+  /* Desktop: verberg het nav-menu (we tonen rechts inline buttons) */
+  display: none;
 
   @media (max-width: 1024px) {
     display: ${props => props.isOpen ? 'flex' : 'none'};
@@ -103,6 +104,14 @@ const AuthButtons = styled.div`
     flex-direction: column;
     gap: 10px;
   }
+`;
+
+const RightCluster = styled.div`
+  display: flex; align-items: center; gap: 8px;
+`;
+
+const DesktopAuth = styled(AuthButtons)`
+  @media (max-width: 1024px){ display: none; }
 `;
 
 const LoginButton = styled(Link)`
@@ -225,24 +234,23 @@ const MobileMenuButton = styled.button`
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isVerhuurderLoggedIn, setIsVerhuurderLoggedIn] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
-  const [verhuurderEmail, setVerhuurderEmail] = useState('');
+  const [userLabel, setUserLabel] = useState('');
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
     const checkAuthStatus = () => {
       // Check regular user auth
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
       const email = localStorage.getItem('userEmail') || '';
+      const name = localStorage.getItem('userName') || '';
       setIsLoggedIn(loggedIn);
-      setUserEmail(email);
+      const label = name || email || '';
+      setUserLabel(label);
 
-      // Check verhuurder auth
-      const verhuurderLoggedIn = localStorage.getItem('verhuurderLoggedIn') === 'true';
-      const verhuurderEmailStored = localStorage.getItem('verhuurderEmail') || '';
-      setIsVerhuurderLoggedIn(verhuurderLoggedIn);
-      setVerhuurderEmail(verhuurderEmailStored);
     };
 
     checkAuthStatus();
@@ -254,6 +262,7 @@ const Header: React.FC = () => {
     window.addEventListener('authStatusChanged', checkAuthStatus);
 
     return () => {
+      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('storage', checkAuthStatus);
       window.removeEventListener('authStatusChanged', checkAuthStatus);
     };
@@ -264,8 +273,9 @@ const Header: React.FC = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('paymentCompleted');
+    localStorage.removeItem('userName');
     setIsLoggedIn(false);
-    setUserEmail('');
+    setUserLabel('');
 
     // Trigger custom event for real-time updates
     window.dispatchEvent(new Event('authStatusChanged'));
@@ -273,52 +283,44 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
-  const handleVerhuurderLogout = () => {
-    // Clear verhuurder auth
-    localStorage.removeItem('verhuurderLoggedIn');
-    localStorage.removeItem('verhuurderEmail');
-    localStorage.removeItem('verhuurderToken');
-    setIsVerhuurderLoggedIn(false);
-    setVerhuurderEmail('');
-
-    // Trigger custom event for real-time updates
-    window.dispatchEvent(new Event('authStatusChanged'));
-
-    navigate('/verhuurders/login');
-  };
 
   return (
-    <HeaderContainer>
+    <HeaderContainer $scrolled={scrolled}>
       <HeaderContent>
         <Logo to="/">
           <img src="/logo.png" alt="Fyxed Wonen" />
         </Logo>
 
+        {/* Mobile menu (in uitklap) */}
         <Nav isOpen={isMenuOpen}>
-          <NavLink to="/woning">Huurwoningen</NavLink>
-
           <AuthButtons>
-            {isVerhuurderLoggedIn ? (
-              <UserMenu>
-                <NavLink to="/verhuurders/dashboard">Dashboard</NavLink>
-                <UserInfo>{verhuurderEmail}</UserInfo>
-                <LogoutButton onClick={handleVerhuurderLogout}>Uitloggen</LogoutButton>
-              </UserMenu>
-            ) : isLoggedIn ? (
+            {isLoggedIn ? (
               <UserMenu>
                 <NavLink to="/dashboard">Dashboard</NavLink>
-                <UserInfo>{userEmail}</UserInfo>
+                <UserInfo>● {userLabel || 'Online'}</UserInfo>
                 <LogoutButton onClick={handleLogout}>Uitloggen</LogoutButton>
               </UserMenu>
             ) : (
-              <>
-                <LoginButton to="/login">Inloggen</LoginButton>
-                <RegisterButton to="/register">Registreren</RegisterButton>
-              </>
+              <LoginButton to="/login">Inloggen</LoginButton>
             )}
           </AuthButtons>
         </Nav>
 
+        {/* Desktop rechts: auth + thema-toggle */}
+        <RightCluster>
+          <DesktopAuth>
+            {isLoggedIn ? (
+              <UserMenu>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+                <UserInfo>● {userLabel || 'Online'}</UserInfo>
+                <LogoutButton onClick={handleLogout}>Uitloggen</LogoutButton>
+              </UserMenu>
+            ) : (
+              <LoginButton to="/login">Inloggen</LoginButton>
+            )}
+          </DesktopAuth>
+          <ThemeToggle />
+        </RightCluster>
         <MobileMenuButton aria-label="Menu" onClick={() => setIsMenuOpen(!isMenuOpen)}>
           <span />
           <span />

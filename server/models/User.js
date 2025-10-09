@@ -50,6 +50,98 @@ const UserSchema = new mongoose.Schema({
   paymentCompleted: {
     type: Boolean,
     default: false
+  },
+
+  // Subscription info (RentBird pricing model)
+  subscription: {
+    tier: {
+      type: String,
+      enum: ['1_month', '2_months', '3_months'],
+      default: null
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive', 'cancelled', 'past_due'],
+      default: 'inactive'
+    },
+    startDate: Date,
+    endDate: Date,
+    stripeCustomerId: String,
+    stripeSubscriptionId: String,
+    stripePriceId: String,
+    cancelAtPeriodEnd: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  // Woningvoorkeuren (matching criteria)
+  preferences: {
+    cities: [{
+      type: String
+    }],
+    minPrice: {
+      type: Number,
+      default: 0
+    },
+    maxPrice: {
+      type: Number,
+      default: 3000
+    },
+    minRooms: {
+      type: Number,
+      default: 1
+    },
+    minSize: {
+      type: Number,
+      default: 0
+    },
+    maxSize: {
+      type: Number,
+      default: 500
+    },
+    furnished: {
+      type: String,
+      enum: ['yes', 'no', 'both'],
+      default: 'both'
+    },
+    petsAllowed: {
+      type: Boolean,
+      default: false
+    },
+    features: [{
+      type: String,
+      enum: ['balcony', 'garden', 'parking', 'elevator', 'storage']
+    }],
+    availableFrom: Date
+  },
+
+  // Notification settings
+  notifications: {
+    email: {
+      type: Boolean,
+      default: true
+    },
+    frequency: {
+      type: String,
+      enum: ['instant', 'daily', 'weekly'],
+      default: 'instant'
+    },
+    lastSent: Date
+  },
+
+  // Onboarding & Analytics
+  onboardingCompleted: {
+    type: Boolean,
+    default: false
+  },
+  totalMatches: {
+    type: Number,
+    default: 0
+  },
+  lastActiveAt: {
+    type: Date,
+    default: Date.now
   }
 }, {
   timestamps: true

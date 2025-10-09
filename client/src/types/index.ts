@@ -17,6 +17,12 @@ export interface Property {
   images: string[];
   features?: string[];
   availability: string;
+  // Scraper metadata
+  source?: string;
+  sourceId?: string;
+  sourceUrl?: string;
+  scrapedAt?: string;
+  offeredSince?: string; // ISO date string
   furnished: boolean;
   petsAllowed: boolean;
   garden: boolean;

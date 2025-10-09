@@ -26,6 +26,20 @@ const createTransporter = () => {
   });
 };
 
+const maybeLogAndBypassSend = async (mailOptions, context = 'email') => {
+  if (process.env.EMAIL_MODE === 'log') {
+    console.log(`[EmailService] EMAIL_MODE=log → skipping send (${context})`);
+    console.log('[EmailService] To:', mailOptions.to);
+    console.log('[EmailService] Subject:', mailOptions.subject);
+    if (mailOptions.html) {
+      console.log('[EmailService] HTML preview (first 400 chars):');
+      console.log(String(mailOptions.html).slice(0, 400) + '...');
+    }
+    return { success: true, messageId: 'log-mode' };
+  }
+  return null;
+};
+
 // Generate reset token
 const generateResetToken = () => {
   return crypto.randomBytes(32).toString('hex');
@@ -156,6 +170,8 @@ const sendPasswordResetEmail = async (email, resetToken, userType = 'user') => {
     };
 
     console.log('[EmailService] Sending email...');
+    const bypass = await maybeLogAndBypassSend(mailOptions, 'reset');
+    if (bypass) return bypass;
     const info = await transporter.sendMail(mailOptions);
     console.log('[EmailService] ✓ Password reset email sent successfully!');
     console.log('[EmailService] Message ID:', info.messageId);
@@ -323,6 +339,8 @@ const sendWelcomeEmail = async (email, firstName, userType = 'user') => {
     };
 
     console.log('[EmailService] Sending welcome email...');
+    const bypass = await maybeLogAndBypassSend(mailOptions, 'welcome');
+    if (bypass) return bypass;
     const info = await transporter.sendMail(mailOptions);
     console.log('[EmailService] ✓ Welcome email sent successfully!');
     console.log('[EmailService] Message ID:', info.messageId);
@@ -343,8 +361,275 @@ const sendWelcomeEmail = async (email, firstName, userType = 'user') => {
   }
 };
 
+// Send match notification email
+const sendMatchNotification = async (user, match, property) => {
+  try {
+    console.log('[EmailService] Starting match notification email send...');
+    console.log('[EmailService] Target email:', user.email);
+    console.log('[EmailService] Match score:', match.score);
+
+    const transporter = createTransporter();
+
+    // Verify SMTP connection
+    try {
+      await transporter.verify();
+      console.log('[EmailService] SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('[EmailService] SMTP verification failed:', verifyError.message);
+    }
+
+    const appBaseUrl = process.env.APP_BASE_URL || 'https://fyxedwonen.nl';
+    const matchUrl = `${appBaseUrl}/matches/${match._id}`;
+
+    // Format price
+    const formattedPrice = new Intl.NumberFormat('nl-NL', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(property.price);
+
+    const mailOptions = {
+      from: `"${process.env.EMAIL_FROM_NAME}" <${process.env.EMAIL_FROM}>`,
+      to: user.email,
+      subject: `🏠 Nieuwe Match: ${property.title}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+              color: #333;
+              background-color: #f5f5f5;
+            }
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background: white;
+            }
+            .header {
+              background: linear-gradient(135deg, #38b6ff, #2196f3);
+              color: white;
+              padding: 30px;
+              text-align: center;
+            }
+            .header h1 {
+              margin: 0;
+              font-size: 24px;
+            }
+            .match-score {
+              background: rgba(255, 255, 255, 0.2);
+              display: inline-block;
+              padding: 10px 20px;
+              border-radius: 20px;
+              margin-top: 10px;
+              font-size: 18px;
+              font-weight: bold;
+            }
+            .content {
+              padding: 30px;
+            }
+            .property-image {
+              width: 100%;
+              height: 300px;
+              object-fit: cover;
+              border-radius: 10px;
+              margin-bottom: 20px;
+            }
+            .property-title {
+              font-size: 22px;
+              color: #2196f3;
+              margin: 0 0 15px 0;
+            }
+            .property-details {
+              background: #f9f9f9;
+              padding: 20px;
+              border-radius: 10px;
+              margin: 20px 0;
+            }
+            .detail-row {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              border-bottom: 1px solid #e0e0e0;
+            }
+            .detail-row:last-child {
+              border-bottom: none;
+            }
+            .detail-label {
+              font-weight: bold;
+              color: #666;
+            }
+            .detail-value {
+              color: #333;
+            }
+            .match-reasons {
+              background: #e3f2fd;
+              border-left: 4px solid #2196f3;
+              padding: 15px;
+              margin: 20px 0;
+              border-radius: 5px;
+            }
+            .match-reasons h3 {
+              margin: 0 0 10px 0;
+              color: #1976d2;
+              font-size: 16px;
+            }
+            .match-reasons ul {
+              margin: 0;
+              padding-left: 20px;
+            }
+            .match-reasons li {
+              margin: 5px 0;
+              color: #555;
+            }
+            .button {
+              display: inline-block;
+              padding: 15px 40px;
+              background: #38b6ff;
+              color: white;
+              text-decoration: none;
+              border-radius: 8px;
+              margin: 20px 0;
+              font-weight: bold;
+              text-align: center;
+            }
+            .button:hover {
+              background: #2196f3;
+            }
+            .secondary-button {
+              display: inline-block;
+              padding: 12px 30px;
+              background: white;
+              color: #2196f3;
+              text-decoration: none;
+              border: 2px solid #2196f3;
+              border-radius: 8px;
+              margin: 10px 5px;
+              font-weight: bold;
+            }
+            .button-container {
+              text-align: center;
+              margin: 30px 0;
+            }
+            .footer {
+              background: #f5f5f5;
+              text-align: center;
+              padding: 20px;
+              color: #666;
+              font-size: 12px;
+            }
+            .urgency-badge {
+              background: #ff9800;
+              color: white;
+              padding: 8px 15px;
+              border-radius: 20px;
+              display: inline-block;
+              font-size: 14px;
+              margin: 10px 0;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🎉 Nieuwe Woning Match!</h1>
+              <div class="match-score">${match.score}% Match</div>
+            </div>
+
+            <div class="content">
+              ${property.images && property.images.length > 0
+                ? `<img src="${property.images[0]}" alt="${property.title}" class="property-image" onerror="this.style.display='none'">`
+                : ''}
+
+              <div class="urgency-badge">⚡ Wees er snel bij!</div>
+
+              <h2 class="property-title">${property.title}</h2>
+
+              <div class="property-details">
+                <div class="detail-row">
+                  <span class="detail-label">📍 Locatie</span>
+                  <span class="detail-value">${property.address.city}${property.address.street ? `, ${property.address.street}` : ''}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">💰 Huur per maand</span>
+                  <span class="detail-value">${formattedPrice}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">📏 Oppervlakte</span>
+                  <span class="detail-value">${property.size} m²</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">🚪 Kamers</span>
+                  <span class="detail-value">${property.rooms}</span>
+                </div>
+                ${property.furnished !== undefined
+                  ? `<div class="detail-row">
+                      <span class="detail-label">🛋️ Gemeubileerd</span>
+                      <span class="detail-value">${property.furnished ? 'Ja' : 'Nee'}</span>
+                    </div>`
+                  : ''}
+              </div>
+
+              ${match.matchReasons && match.matchReasons.length > 0
+                ? `<div class="match-reasons">
+                    <h3>✨ Waarom deze woning bij jou past:</h3>
+                    <ul>
+                      ${match.matchReasons.map(reason => `<li>${reason}</li>`).join('')}
+                    </ul>
+                  </div>`
+                : ''}
+
+              <div class="button-container">
+                <a href="${matchUrl}" class="button">Bekijk Match Details</a>
+                <br>
+                <a href="${property.sourceUrl}" class="secondary-button" target="_blank">Direct naar ${property.source.charAt(0).toUpperCase() + property.source.slice(1)}</a>
+              </div>
+
+              <p style="color: #ff9800; font-weight: bold; text-align: center;">
+                💡 Tip: Reageer binnen 15 minuten voor 4x meer kans op een bezichtiging!
+              </p>
+
+              <p style="margin-top: 30px; font-size: 14px; color: #666;">
+                Deze woning is gevonden op <strong>${property.source}</strong> en matcht ${match.score}% met jouw voorkeuren.
+              </p>
+            </div>
+
+            <div class="footer">
+              <p>© ${new Date().getFullYear()} Fyxed Wonen. Alle rechten voorbehouden.</p>
+              <p>Deze e-mail is verstuurd naar ${user.email}</p>
+              <p style="margin-top: 10px;">
+                <a href="${appBaseUrl}/preferences" style="color: #2196f3; text-decoration: none;">Voorkeuren aanpassen</a> |
+                <a href="${appBaseUrl}/subscription" style="color: #2196f3; text-decoration: none;">Abonnement beheren</a>
+              </p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `
+    };
+
+    console.log('[EmailService] Sending match notification email...');
+    const bypass = await maybeLogAndBypassSend(mailOptions, 'match');
+    if (bypass) return bypass;
+    const info = await transporter.sendMail(mailOptions);
+    console.log('[EmailService] ✓ Match notification email sent successfully!');
+    console.log('[EmailService] Message ID:', info.messageId);
+
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('[EmailService] ✗ Error sending match notification email:');
+    console.error('[EmailService] Error type:', error.name);
+    console.error('[EmailService] Error message:', error.message);
+    throw error;
+  }
+};
+
 module.exports = {
   generateResetToken,
   sendPasswordResetEmail,
-  sendWelcomeEmail
+  sendWelcomeEmail,
+  sendMatchNotification
 };

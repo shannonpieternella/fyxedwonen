@@ -1,0 +1,21 @@
+{
+  "name": "kamernet",
+  "startUrlTemplates": [
+    "https://kamernet.nl/huren/kamer-{citySlug}",
+    "https://kamernet.nl/huren/studio-{citySlug}",
+    "https://kamernet.nl/huren/appartement-{citySlug}"
+  ],
+  "list": {
+    "itemLink": "a[href^='/huren/']",
+    "next": "a[rel='next'], a[aria-label='Volgende'], a[aria-label='Next']"
+  },
+  "hrefPattern": "^/huren/(kamer|studio|appartement).*-(\\d+)$",
+  "detail": {
+    "title": "h1",
+    "priceText": "*",
+    "sizeText": "li",
+    "images": "img",
+    "furnishedKeywords": ["gemeubileerd", "gestoffeerd"]
+  },
+  "notes": "ConfigSpider-based Kamernet config. Templates cover kamer/studio/appartement categories. hrefPattern restricts to detail pages ending with -<digits>. Adjust selectors if DOM differs."
+}

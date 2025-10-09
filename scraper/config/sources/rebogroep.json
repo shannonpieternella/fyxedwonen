@@ -1,0 +1,19 @@
+{
+  "name": "rebogroep",
+  "startUrlTemplates": [
+    "https://www.rebogroep.nl/nl/aanbod",
+    "https://www.rebogroep.nl/nl/particulier/ons-aanbod/kopen"
+  ],
+  "list": {
+    "itemLink": "a[href^='/nl/aanbod/']",
+    "next": "a[rel='next'], a[aria-label='Volgende'], a[aria-label='Next']"
+  },
+  "hrefPattern": "^/nl/aanbod/(gen-[a-z0-9]+(?:-[a-z0-9]+)?|r[0-9]+)-",
+  "detail": {
+    "title": "h1",
+    "priceText": "*",
+    "sizeText": "*",
+    "images": "img"
+  },
+  "notes": "Custom spider reads city from URL or page and filters against SCRAPER_CITIES. hrefPattern restricts to real detail pages."
+}

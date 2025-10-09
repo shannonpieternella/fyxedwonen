@@ -4,13 +4,13 @@ import styled from 'styled-components';
 
 const HeroSection = styled.section`
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  padding: 80px 0 100px;
+  padding: 40px 0 60px;
   position: relative;
   overflow-x: hidden;
   width: 100%;
 
   @media (max-width: 968px) {
-    padding: 60px 0 80px;
+    padding: 30px 0 40px;
   }
 `;
 
@@ -77,129 +77,15 @@ const HeroTitle = styled.h1`
 `;
 
 const HeroSubtitle = styled.p`
-  font-size: 20px;
+  font-size: 18px;
   color: #6b7280;
-  line-height: 1.6;
-  max-width: 500px;
+  line-height: 1.5;
+  max-width: 480px;
   margin: 0;
   animation: fadeInUp 0.8s ease-out 0.2s both;
 
   @media (max-width: 768px) {
     font-size: 16px;
-  }
-`;
-
-const CTAButtonGroup = styled.div`
-  display: flex;
-  gap: 16px;
-  margin-top: 16px;
-  animation: fadeInUp 0.8s ease-out 0.4s both;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-const PrimaryButton = styled.button`
-  background: linear-gradient(135deg, #38b6ff 0%, #2196f3 100%);
-  color: white;
-  border: none;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(56, 182, 255, 0.3);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(56, 182, 255, 0.4);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    padding: 14px 28px;
-    font-size: 16px;
-  }
-`;
-
-const SecondaryButton = styled.button`
-  background: transparent;
-  color: #38b6ff;
-  border: 2px solid #38b6ff;
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #38b6ff;
-    color: white;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  @media (max-width: 768px) {
-    padding: 14px 28px;
-    font-size: 16px;
-  }
-`;
-
-const FeatureBadges = styled.div`
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 8px;
-  animation: fadeInUp 0.8s ease-out 0.6s both;
-  justify-content: center;
-  max-width: 600px;
-
-  @media (max-width: 968px) {
-    justify-content: center;
-    margin: 0 auto;
-    margin-top: 8px;
-  }
-`;
-
-const Badge = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: white;
-  padding: 10px 18px;
-  border-radius: 24px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #4b5563;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid #e5e7eb;
-  transition: all 0.3s ease;
-
-  &::before {
-    content: '✓';
-    color: #38b6ff;
-    font-weight: bold;
-    font-size: 16px;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    border-color: #38b6ff;
-  }
-
-  @media (max-width: 768px) {
-    font-size: 13px;
-    padding: 8px 14px;
   }
 `;
 
@@ -209,7 +95,7 @@ const TruckContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 450px;
+  height: 350px;
   animation: fadeInRight 0.8s ease-out 0.3s both;
 
   @keyframes fadeInRight {
@@ -224,15 +110,15 @@ const TruckContainer = styled.div`
   }
 
   @media (max-width: 968px) {
-    height: 350px;
+    height: 280px;
   }
 `;
 
 const TruckIllustration = styled.div<{ $currentImage: string }>`
   position: relative;
   width: 100%;
-  max-width: 550px;
-  height: 380px;
+  max-width: 500px;
+  height: 300px;
   background-image: url(${props => props.$currentImage});
   background-size: cover;
   background-position: center;
@@ -268,16 +154,16 @@ const TruckIllustration = styled.div<{ $currentImage: string }>`
   &::after {
     content: '🏠';
     position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 70px;
-    height: 70px;
+    bottom: 16px;
+    right: 16px;
+    width: 60px;
+    height: 60px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 28px;
     z-index: 2;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     backdrop-filter: blur(10px);
@@ -285,8 +171,8 @@ const TruckIllustration = styled.div<{ $currentImage: string }>`
   }
 
   @media (max-width: 968px) {
-    height: 300px;
-    max-width: 450px;
+    height: 240px;
+    max-width: 400px;
   }
 `;
 
@@ -316,14 +202,20 @@ const Dot = styled.div<{ $active: boolean }>`
 `;
 
 const SearchSection = styled.section`
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
-  padding: 40px 0 60px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 0 0 60px;
   overflow-x: hidden;
   width: 100%;
+  margin-top: -20px;
+
+  @media (max-width: 968px) {
+    margin-top: -10px;
+    padding: 0 0 40px;
+  }
 `;
 
 const SearchContainer = styled.div`
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
@@ -735,20 +627,6 @@ const Homepage: React.FC = () => {
             <HeroSubtitle>
               Vind jouw droomwoning in Nederland. Snel, eenvoudig en zonder gedoe. Duizenden woningen beschikbaar.
             </HeroSubtitle>
-
-            <CTAButtonGroup>
-              <PrimaryButton onClick={() => navigate('/woning')}>
-                Bekijk woningen
-              </PrimaryButton>
-              <SecondaryButton onClick={() => {
-                const searchSection = document.querySelector('[data-search-section]');
-                if (searchSection) {
-                  searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-              }}>
-                Begin zoeken
-              </SecondaryButton>
-            </CTAButtonGroup>
           </LeftContent>
 
           <TruckContainer>

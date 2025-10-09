@@ -1,37 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements
-} from '@stripe/react-stripe-js';
-import { API_BASE_URL } from '../services/api';
+// Stripe.js niet nodig in demo/URL-flow; we gebruiken backend createCheckout
+import { subscriptionApi } from '../services/api';
 
-// Type for Stripe global
-declare const Stripe: any;
-
-// Initialize Stripe
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || 'pk_test_demo');
+// Geen Stripe.js initialisatie nodig
 
 const PageContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #38b6ff, #2196f3);
+  background: ${(p) => p.theme.colors.bg};
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 24px;
 `;
 
 const PaymentCard = styled.div`
-  background: white;
+  background: ${(p) => p.theme.colors.white};
   border-radius: 24px;
-  padding: 48px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 32px 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid ${(p) => p.theme.colors.border};
   width: 100%;
-  max-width: 500px;
+  max-width: 560px;
 `;
 
 const Logo = styled.div`
@@ -65,7 +56,7 @@ const PlanCard = styled.div`
   background: #f8fafc;
   border: 2px solid #e5e7eb;
   border-radius: 16px;
-  padding: 24px;
+  padding: 18px;
   margin-bottom: 32px;
 `;
 
@@ -148,7 +139,7 @@ const PayButton = styled.button`
   background: #6772e5;
   color: white;
   border: none;
-  padding: 16px 32px;
+  padding: 14px 28px;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
@@ -202,65 +193,32 @@ const PaymentForm: React.FC<{ selectedPlan: any }> = ({ selectedPlan }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleStripeCheckout = async () => {
+  const handleCheckout = async () => {
     setLoading(true);
     setError('');
 
     try {
-      // Get user email with fallback
-      const userEmail = localStorage.getItem('tempUserEmail') || localStorage.getItem('userEmail') || 'demo@fyxedwonen.nl';
+      // Nieuwe subscription flow (RentBird): tier selecteren
+      const tier = selectedPlan?.tier || '1_month';
+      const { sessionId, url, demo } = await subscriptionApi.createCheckout(tier);
 
-      // Call backend to create Stripe checkout session
-      const response = await fetch(`${API_BASE_URL}/stripe/create-checkout-session`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          planName: selectedPlan?.planName || 'Fyxed Wonen Premium',
-          price: selectedPlan?.price || 29.95,
-          userEmail: userEmail,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Fout bij het aanmaken van betaalsessie');
-      }
-
-      const { sessionId, url, demo } = await response.json();
-
-      // If we're in demo mode (no external URL), simulate payment
-      if (demo) {
-        setLoading(false);
-        alert('Demo Mode: Betaling gesimuleerd! Je wordt doorgestuurd naar het succes scherm.');
+      // Demo: alleen via verify op success-pagina
+      if (demo && sessionId) {
         navigate('/payment-success?session_id=' + sessionId);
         return;
       }
 
-      // If we have a direct URL (demo mode), open it
+      // Als er een directe URL is, navigeer daarheen (zelfde tab)
       if (url) {
-        window.open(url, '_blank');
-        // Simulate success after 5 seconds
-        setTimeout(() => {
-          setLoading(false);
-          navigate('/payment-success?session_id=' + sessionId);
-        }, 5000);
+        window.location.href = url;
         return;
       }
 
-      // Otherwise use normal Stripe redirect
-      const stripe = (window as any).Stripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
-
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: sessionId,
-      });
-
-      if (error) {
-        setError(error.message || 'Er is een fout opgetreden bij het doorsturen naar Stripe.');
-      }
+      // Geen URL en niet-demomodus → fout tonen
+      setError('Kon betaalsessie niet openen. Probeer opnieuw.');
 
     } catch (err) {
-      console.error('Stripe error:', err);
+      console.error('Payment error:', err);
       setError('Er is een fout opgetreden bij de betaling. Probeer het opnieuw.');
       setLoading(false);
     }
@@ -269,22 +227,22 @@ const PaymentForm: React.FC<{ selectedPlan: any }> = ({ selectedPlan }) => {
   return (
     <div>
       <PayButton
-        onClick={handleStripeCheckout}
+        onClick={handleCheckout}
         disabled={loading}
         style={{ marginBottom: '16px' }}
       >
-{loading ? 'Verbinden met Stripe...' : `💳 Betaal €${selectedPlan?.price?.toFixed(2) || '29.99'} via Stripe`}
+{loading ? 'Betaling voorbereiden…' : `💳 Betaal €${selectedPlan?.price?.toFixed(2) || '26.95'} met iDeal`}
       </PayButton>
 
-      <div style={{ textAlign: 'center', marginBottom: '16px', color: '#6b7280', fontSize: '14px' }}>
-        Doorgestuurd naar veilige Stripe betalingspagina • iDEAL, creditcard, Bancontact
+      <div style={{ textAlign: 'center', marginBottom: '12px', color: '#6b7280', fontSize: '13px' }}>
+        iDEAL, creditcard, Bancontact • Beveiligde betaling
       </div>
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       <SecurityNote>
         <span className="icon">🔒</span>
-        Je betaling wordt beveiligd verwerkt door Stripe. Ondersteunt iDEAL, creditcard, Bancontact en meer.
+        Je betaling wordt veilig verwerkt. Ondersteunt iDEAL, creditcard, Bancontact en meer.
       </SecurityNote>
     </div>
   );
@@ -305,46 +263,57 @@ const Payment: React.FC = () => {
       setSelectedPlan(userData.selectedPlan);
     } else if (storedEmail) {
       setUserEmail(storedEmail);
-      // Default plan if accessing payment directly
-      setSelectedPlan({
-        planName: 'Premium Basic',
-        price: 29.95
-      });
+      // Default plan if accessing payment directly (actieprijs €3 goedkoper)
+      const fallback = { planId: 'basic', planName: 'Premium Basic', price: 26.95, tier: '1_month' };
+      setSelectedPlan(fallback);
+      localStorage.setItem('selectedPlan', JSON.stringify(fallback));
+    } else {
+      // Geen context? Zet ook een fallback om uitval te voorkomen
+      const fallback = { planId: 'basic', planName: 'Premium Basic', price: 26.95, tier: '1_month' };
+      setSelectedPlan(fallback);
+      try { localStorage.setItem('selectedPlan', JSON.stringify(fallback)); } catch {}
     }
   }, []);
 
   return (
-    <Elements stripe={stripePromise}>
-      <PageContainer>
-        <PaymentCard>
-          <Logo>
-            <LogoText>FYXED WONEN</LogoText>
-          </Logo>
+    <PageContainer>
+      <PaymentCard>
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8}}>
+          <div style={{fontWeight:800, color:'#0f172a'}}>Stap 3/3 • Betaling</div>
+          <div style={{color:'#64748b', fontWeight:700}}>Plan: {selectedPlan?.planName} · €{(selectedPlan?.price ?? 26.95).toFixed(2)}</div>
+        </div>
+        <Logo>
+          <LogoText>FYXED WONEN</LogoText>
+        </Logo>
 
-          <Title>Voltooi je registratie</Title>
-          <Subtitle>
-            {userEmail && `Welkom ${userEmail}! `}
-            Kies je abonnement om toegang te krijgen tot alle woningen.
-          </Subtitle>
+        <Title>Voltooi je registratie</Title>
+        <Subtitle>
+          {userEmail && `Welkom ${userEmail}! `}
+          Kies je abonnement om toegang te krijgen tot alle woningen.
+        </Subtitle>
 
-          <PlanCard>
-            <PlanTitle>{selectedPlan?.planName || 'Premium Toegang'}</PlanTitle>
-            <PlanPrice>
-              €{selectedPlan?.price?.toFixed(2) || '29.99'} <span className="period">eenmalige betaling</span>
-            </PlanPrice>
-            <PlanFeatures>
-              <li>Onbeperkte toegang tot alle woningen</li>
-              <li>Contact met verhuurders</li>
-              <li>Geavanceerde filters</li>
-              <li>E-mail notificaties</li>
-              <li>24/7 klantenservice</li>
-            </PlanFeatures>
-          </PlanCard>
+        <PlanCard>
+          <PlanTitle>{selectedPlan?.planName || 'Premium Toegang'}</PlanTitle>
+          <PlanPrice>
+            €{selectedPlan?.price?.toFixed(2) || '26.95'} <span className="period">eenmalige betaling</span>
+          </PlanPrice>
+          <PlanFeatures>
+            <li>Directe e‑mailalerts bij nieuwe matches</li>
+            <li>Alle woningen overzichtelijk op één plek</li>
+            <li>Geavanceerde filters en voorkeursprofiel</li>
+            <li>Contact met verhuurders</li>
+            <li>Support die meedenkt</li>
+          </PlanFeatures>
+        </PlanCard>
 
-          <PaymentForm selectedPlan={selectedPlan} />
-        </PaymentCard>
-      </PageContainer>
-    </Elements>
+        <div style={{display:'grid', gap:8, marginBottom:12, color:'#64748b', fontSize:12, textAlign:'center'}}>
+          <div>Niet tevreden? Binnen 14 dagen je geld terug.</div>
+          <div>★ 4,6 — gewaardeerd door 1.786 gebruikers</div>
+        </div>
+
+        <PaymentForm selectedPlan={selectedPlan} />
+      </PaymentCard>
+    </PageContainer>
   );
 };
 

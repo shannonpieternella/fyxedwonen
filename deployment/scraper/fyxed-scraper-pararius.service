@@ -1,0 +1,20 @@
+[Unit]
+Description=Fyxed Wonen Scraper - Pararius
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/fyxedwonen-scraper.env
+WorkingDirectory=/opt/Fyxedwonen
+ExecStart=/bin/bash -lc 'SCRAPER_SOURCES=pararius bash scraper/start.sh'
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+ProtectSystem=full
+ProtectHome=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
+

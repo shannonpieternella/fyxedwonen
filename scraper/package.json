@@ -1,0 +1,15 @@
+{
+  "name": "fyxed-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone scrapers for Fyxed Wonen (Pararius, Kamernet, Huurwoningen)",
+  "scripts": {
+    "start": "node scheduler.js",
+    "scrape": "bash start.sh",
+    "init:env": "node scripts/sync-env.js",
+    "match": "node scripts/match-source.js",
+    "pararius": "SCRAPER_SOURCES=pararius bash start.sh",
+    "kamernet": "SCRAPER_SOURCES=kamernet bash start.sh",
+    "huurwoningen": "SCRAPER_SOURCES=huurwoningen bash start.sh"
+  }
+}
